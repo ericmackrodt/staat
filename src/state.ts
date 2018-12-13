@@ -4,8 +4,10 @@ type ThisState = {
   name: string;
 };
 
+type SetName = { name: string };
+
 export class AppState {
-  public setName(currentState: ThisState, name: string): ThisState {
+  public setName(currentState: ThisState, { name }: SetName): ThisState {
     return { ...currentState, name };
   }
 
@@ -22,11 +24,11 @@ const TheState = staat<ThisState, AppState>(AppState);
 (async function() {
   const sts = new TheState();
 
-  await sts.setName("string");
+  await sts.setName({ name: "string" });
   console.log(sts.currentState);
-  await sts.setName("jeff");
+  await sts.setName({ name: "jeff" });
   console.log(sts.currentState);
-  await sts.setName("boros");
+  await sts.setName({ name: "boros" });
   console.log(sts.currentState);
 
   await sts.undo();
