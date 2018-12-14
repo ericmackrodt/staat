@@ -6,6 +6,7 @@
     "lib": ["es6", "dom", "es2015.collection"],
     "sourceMap": true,
     "rootDir": "src",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["./src/*.ts"],
 }

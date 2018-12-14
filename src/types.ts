@@ -13,6 +13,14 @@ type NoCommonParam<TState, T extends {}> = {
 
 export type StateContainerType<TState, T extends {}> = {
   currentState: TState;
-  undo(): void;
-  redo(): void;
+  undo(): Promise<TState>;
+  redo(): Promise<TState>;
+  subscribe(fn: Subscription): void;
+  unsubscribe(fn: Subscription): void;
 } & NoCommonParam<TState, T>;
+
+export type StateContainers = Array<
+  StateContainerType<any, any> | IType<StateContainerType<any, any>>
+>;
+
+export type Subscription = () => Promise<void>;

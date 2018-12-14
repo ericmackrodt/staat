@@ -1,6 +1,25 @@
 import { StateContainer } from "./state-container";
 import { IType, StateContainerType } from "./types";
 
+function isPromise(obj: any) {
+  return (
+    !!obj &&
+    (typeof obj === "object" || typeof obj === "function") &&
+    typeof obj.then === "function" &&
+    typeof obj.catch === "function"
+  );
+}
+
+function buildProto<T>(
+  prototype: Record<string, any>,
+  container: StateContainer<T>
+) {
+  prototype.undo = () => container.undo();
+  prototype.redo = () => container.redo();
+  prototype.subscribe = fn => container.subscribe(fn);
+  prototype.unsubscribe = fn => container.unsubscribe(fn);
+}
+
 function modifyProptotype<TClass, TState>(
   proto: IType<TClass>,
   container: StateContainer<TState>
@@ -12,6 +31,9 @@ function modifyProptotype<TClass, TState>(
       prototype[key] = function(...args: any[]) {
         const state = container.getState();
         const result = actualFn(state, ...args);
+        if (isPromise(result)) {
+          return result.then(state => container.setState(state));
+        }
         return container.setState(result);
       };
       return prototype;
@@ -20,14 +42,16 @@ function modifyProptotype<TClass, TState>(
     get: () => container.getState()
   });
 
-  proto.prototype.undo = () => container.undo();
-  proto.prototype.redo = () => container.redo();
+  buildProto(proto.prototype, container);
   return proto as IType<StateContainerType<TState, TClass>>;
 }
 
 export function staat<TState, T>(
   input: IType<T>
 ): IType<StateContainerType<TState, T>> {
-  const stateContainer = new StateContainer<TState>();
+  const stateContainer = new StateContainer<TState>(
+    // TODO: CHANGE THIS TYPE
+    (input as any).initialState
+  );
   return modifyProptotype(input, stateContainer);
 }
