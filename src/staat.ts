@@ -14,8 +14,8 @@ function buildProto<T>(
   prototype: Record<string, any>,
   container: StateContainer<T>
 ) {
-  prototype.undo = () => container.undo();
-  prototype.redo = () => container.redo();
+  // prototype.undo = () => container.undo();
+  // prototype.redo = () => container.redo();
   prototype.subscribe = fn => container.subscribe(fn);
   prototype.unsubscribe = fn => container.unsubscribe(fn);
 }
