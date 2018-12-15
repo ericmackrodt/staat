@@ -1,32 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { staat } from '../src/staat';
-import { StaatSubscription, StaatProvider, connect } from '../src/react';
-type ThisState = {
-  count: number;
-};
+import { StaatProvider, connect } from '../src/react';
+import * as stateDefinition from './state-definition';
 
-export class AppState {
-  public static initialState: ThisState = {
-    count: 0
-  };
-}
+const { initialState, ...tranformers } = stateDefinition;
 
-const state = staat(
-  {
-    add(currentState: ThisState): ThisState {
-      return { ...currentState, count: currentState.count + 1 };
-    },
-    subtract(currentState: ThisState): ThisState {
-      return { ...currentState, count: currentState.count - 1 };
-    }
-  },
-  {
-    count: 0
-  }
-);
-
-// const theState = TheState.add();
+const state = staat(tranformers, initialState);
 
 const Calculator: React.StatelessComponent<CalculatorProps> = props => (
   <div>
