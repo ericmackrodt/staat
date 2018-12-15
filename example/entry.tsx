@@ -1,7 +1,7 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { staat } from "../src/staat";
-import { StaatSubscription, StaatProvider, connect } from "../src/react";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { staat } from '../src/staat';
+import { StaatSubscription, StaatProvider, connect } from '../src/react';
 type ThisState = {
   count: number;
 };
@@ -10,19 +10,23 @@ export class AppState {
   public static initialState: ThisState = {
     count: 0
   };
-
-  public add(currentState: ThisState): ThisState {
-    return { ...currentState, count: currentState.count + 1 };
-  }
-
-  public subtract(currentState: ThisState): ThisState {
-    return { ...currentState, count: currentState.count - 1 };
-  }
 }
 
-const TheState = staat<ThisState, AppState>(AppState);
+const state = staat(
+  {
+    add(currentState: ThisState): ThisState {
+      return { ...currentState, count: currentState.count + 1 };
+    },
+    subtract(currentState: ThisState): ThisState {
+      return { ...currentState, count: currentState.count - 1 };
+    }
+  },
+  {
+    count: 0
+  }
+);
 
-const theState = new TheState();
+// const theState = TheState.add();
 
 const Calculator: React.StatelessComponent<CalculatorProps> = props => (
   <div>
@@ -34,18 +38,18 @@ const Calculator: React.StatelessComponent<CalculatorProps> = props => (
 );
 
 type StateProps = {
-  state: typeof theState;
+  state: typeof state;
 };
 
 type OwnProps = {};
 
 type CalculatorProps = StateProps & OwnProps;
 
-const Calc = connect<OwnProps, StateProps>({ state: TheState })(Calculator);
+const Calc = connect<OwnProps, StateProps>({ state })(Calculator);
 
 ReactDOM.render(
   <StaatProvider>
     <Calc />
   </StaatProvider>,
-  document.getElementById("entry")
+  document.getElementById('entry')
 );

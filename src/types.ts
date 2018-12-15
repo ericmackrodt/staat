@@ -2,25 +2,27 @@ export interface IType<T> extends Function {
   new (...args: any[]): T;
 }
 
-type NoCommonParam<TState, T extends {}> = {
-  [TKey in keyof T]: T[TKey] extends (
+export type TransformerSignatures<TState, TTransformers extends {}> = {
+  [TKey in keyof TTransformers]: TTransformers[TKey] extends (
     currentState: TState,
     ...args: infer TArgs
   ) => unknown
     ? (...args: TArgs) => Promise<TState>
-    : T[TKey]
+    : TTransformers[TKey]
 };
 
-export type StateContainerType<TState, T extends {}> = {
+export type StateContainerType<TState> = {
   currentState: TState;
-  undo(): Promise<TState>;
-  redo(): Promise<TState>;
   subscribe(fn: Subscription): void;
   unsubscribe(fn: Subscription): void;
-} & NoCommonParam<TState, T>;
+};
 
-export type StateContainers = Array<
-  StateContainerType<any, any> | IType<StateContainerType<any, any>>
->;
+export type TimeTravelContainerType<TState> = StateContainerType<TState> & {
+  undo(): Promise<TState>;
+  redo(): Promise<TState>;
+};
+
+export type State<TState, TTransformers> = StateContainerType<TState> &
+  TransformerSignatures<TState, TTransformers>;
 
 export type Subscription = () => Promise<void>;

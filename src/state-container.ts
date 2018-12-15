@@ -1,6 +1,5 @@
-import { applyChange, diff } from "deep-diff";
-import deepFreeze = require("deep-freeze");
-import { Subscription } from "./types";
+import deepFreeze = require('deep-freeze');
+import { Subscription } from './types';
 
 export class StateContainer<T> {
   private state: deepFreeze.DeepReadonly<T>;
