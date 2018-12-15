@@ -30,19 +30,22 @@ const initialState = {
   count: 0
 };
 
-const state = staat({
-  add(currentState: typeof initialState, value: number) {
-    return { ...currentState, count: currentState.count + value };
+const state = staat(
+  {
+    add(currentState: typeof initialState, value: number) {
+      return { ...currentState, count: currentState.count + value };
+    },
+    subtract(currentState: typeof initialState, value: number) {
+      return { ...currentState, count: currentState.count - value };
+    }
   },
-  subtract(currentState: typeof initialState, value: number) {
-    return { ...currentState, count: currentState.count - value };
-  }
-}, initialState);
+  initialState
+);
 
 async function execution() {
-  async state.add(10);
+  await state.add(10);
   console.log(state.currentState); // { count: 10 }
-  async state.subtract(3);
+  await state.subtract(3);
   console.log(state.currentState); // { count: 7 }
 }
 
@@ -58,27 +61,30 @@ const initialState = {
   count: 0
 };
 
-const state = timeTravelStaat({
-  add(currentState: typeof initialState, value: number) {
-    return { ...currentState, count: currentState.count + value };
+const state = timeTravelStaat(
+  {
+    add(currentState: typeof initialState, value: number) {
+      return { ...currentState, count: currentState.count + value };
+    },
+    subtract(currentState: typeof initialState, value: number) {
+      return { ...currentState, count: currentState.count - value };
+    }
   },
-  subtract(currentState: typeof initialState, value: number) {
-    return { ...currentState, count: currentState.count - value };
-  }
-}, initialState);
+  initialState
+);
 
 async function execution() {
-  async state.add(10);
+  await state.add(10);
   console.log(state.currentState); // { count: 10 }
-  async state.subtract(3);
+  await state.subtract(3);
   console.log(state.currentState); // { count: 7 }
-  async state.undo();
+  await state.undo();
   console.log(state.currentState); // { count: 10 }
-  async state.undo();
+  await state.undo();
   console.log(state.currentState); // { count: 0 }
-  async state.redo();
+  await state.redo();
   console.log(state.currentState); // { count: 10 }
-  async state.redo();
+  await state.redo();
   console.log(state.currentState); // { count: 7 }
 }
 
