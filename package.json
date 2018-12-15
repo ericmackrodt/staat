@@ -4,26 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "doit": "tsc --p tsconfig.json",
-    "example": "parcel example/index.html",
+    "example": "cd packages/example && yarn start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "create-react-context": "^0.2.3",
-    "deep-diff": "^1.0.2",
-    "deep-freeze": "^0.0.1",
-    "react": "^16.6.3"
-  },
   "devDependencies": {
-    "@types/deep-diff": "^0.0.31",
-    "@types/react": "^16.7.17",
-    "@types/deep-freeze": "^0.1.1",
-    "@types/react-dom": "^16.0.11",
-    "parcel": "^1.10.3",
-    "typescript": "^3.2.2",
-    "parcel-plugin-typescript": "^1.0.0",
-    "react-dom": "^16.6.3"
-  }
+    "lerna": "^3.6.0",
+    "typescript": "^3.2.2"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
 }

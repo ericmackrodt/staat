@@ -24,7 +24,7 @@ This library is loosely inspired by Unstated, another really good option for sta
 ## Basic usage
 
 ```ts
-import { staat } from 'staat';
+import { staat } from '@staat/base';
 
 const initialState = {
   count: 0
@@ -55,7 +55,7 @@ execution();
 ## Timetravel usage
 
 ```ts
-import { timeTravelStaat } from 'staat';
+import { staat } from '@staat/base';
 
 const initialState = {
   count: 0

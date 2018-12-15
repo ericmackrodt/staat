@@ -1,13 +1,13 @@
-import * as React from "react";
-import createReactContext from "create-react-context";
-import { IType, StateContainerType, StateContainers } from "../types";
+import * as React from 'react';
+import createReactContext from 'create-react-context';
+import { IType, StateContainerType, StateContainers, State } from '@staat/base';
 
 const { Provider, Consumer } = createReactContext(null);
 
 export class StaatSubscription extends React.Component<StaatSubscriptionProps> {
   private unmounted: boolean = false;
   public state = {};
-  private containers: StateContainerType<any, any>[] = [];
+  private containers: StateContainers = [];
 
   private getContainers(map: Map<any, any>, states: StateContainers) {
     this.containers.forEach(container =>
@@ -17,28 +17,28 @@ export class StaatSubscription extends React.Component<StaatSubscriptionProps> {
 
     if (map === null) {
       throw new Error(
-        "You must wrap your <StaatSubscription> components with a <StaatProvider>"
+        'You must wrap your <StaatSubscription> components with a <StaatProvider>'
       );
     }
 
     let safeMap = map;
     let instances = states.map(ContainerItem => {
-      let instance: StateContainerType<any, any>;
+      let instance: State<any, any>;
 
-      if (
-        typeof ContainerItem === "object" &&
-        typeof ContainerItem.currentState === "object"
-      ) {
-        instance = ContainerItem;
-      } else {
-        instance = safeMap.get(ContainerItem);
-        if (!instance) {
-          instance = new (ContainerItem as IType<
-            StateContainerType<any, any>
-          >)();
-          safeMap.set(ContainerItem, instance);
-        }
-      }
+      // if (
+      //   typeof ContainerItem === 'object' &&
+      //   typeof ContainerItem.currentState === 'object'
+      // ) {
+      instance = ContainerItem;
+      // } else {
+      // instance = safeMap.get(ContainerItem);
+      // if (!instance) {
+      //   instance = new (ContainerItem as IType<
+      //     State<any, any>
+      //   >)();
+      //   safeMap.set(ContainerItem, instance);
+      //}
+      // }
 
       instance.unsubscribe(this.onStateChange);
       instance.subscribe(this.onStateChange);
@@ -86,9 +86,7 @@ export class StaatSubscription extends React.Component<StaatSubscriptionProps> {
 
 export type StaatSubscriptionProps = {
   states: StateContainers;
-  children: (
-    ...containers: StateContainerType<any, any>[]
-  ) => React.ReactElement<any>;
+  children: (...containers: State<any, any>[]) => React.ReactElement<any>;
 };
 
 export const StaatProvider: React.StatelessComponent = props => (
@@ -103,21 +101,18 @@ export const StaatProvider: React.StatelessComponent = props => (
 
 /* WITH CONTAINERS */
 
-type StateProps = Record<
-  string,
-  IType<StateContainerType<any, any>> | StateContainerType<any, any>
->;
+type StateProps = Record<string, State<any, any>>;
 
 const getProps = (
   definitions: StateProps,
-  ...containers: Array<StateContainerType<any, any>>
+  ...containers: Array<State<any, any>>
 ) => {
   return Object.keys(definitions).reduce(
     (previous, next, index) => {
       previous[next] = containers[index];
       return previous;
     },
-    {} as Record<string, StateContainerType<any, any>>
+    {} as Record<string, State<any, any>>
   );
 };
 

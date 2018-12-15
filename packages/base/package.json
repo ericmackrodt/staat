@@ -1,0 +1,19 @@
+{
+  "name": "@staat/base",
+  "version": "0.0.1",
+  "description": "A simple state management library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Mackrodt",
+  "license": "ISC",
+  "dependencies": {
+    "deep-diff": "^1.0.2",
+    "deep-freeze": "^0.0.1"
+  },
+  "devDependencies": {
+    "@types/deep-diff": "^0.0.31",
+    "@types/deep-freeze": "^0.1.1"
+  }
+}

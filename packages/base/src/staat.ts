@@ -83,7 +83,7 @@ function addFunctions<T, TTransformers>(
 //   return modifyProptotype(input, stateContainer);
 // }
 
-export function initializeObject<TState>(
+function initializeObject<TState>(
   container: StateContainer<TState>
 ): StateContainerType<TState> {
   const obj: Partial<StateContainerType<TState>> = {};

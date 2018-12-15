@@ -1,0 +1,19 @@
+{
+  "name": "@staat/react",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Mackrodt",
+  "license": "ISC",
+  "dependencies": {
+    "@staat/base": "0.0.1",
+    "create-react-context": "^0.2.3",
+    "react": "^16.6.3"
+  },
+  "devDependencies": {
+    "@types/react": "^16.7.17"
+  }
+}

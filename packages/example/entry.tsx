@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { staat } from '../src/staat';
-import { StaatProvider, connect } from '../src/react';
+import { staat } from '@staat/base';
+import { StaatProvider, connect } from '@staat/react';
 import * as stateDefinition from './state-definition';
 
 const { initialState, ...tranformers } = stateDefinition;
