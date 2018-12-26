@@ -18,6 +18,7 @@ let plugins = [
 const outputFile = 'index.js';
 
 const config = {
+  mode: 'development',
   entry: __dirname + '/src/index.tsx',
   devtool: 'source-map',
   output: {

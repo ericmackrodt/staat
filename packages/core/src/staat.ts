@@ -1,5 +1,11 @@
 import { StateContainer } from "./state-container";
-import { StateContainerType, State } from "./types";
+import {
+  StateContainerType,
+  State,
+  TimeTravelState,
+  TimeTravelContainerType
+} from "./types";
+import { TimeTravelContainer } from "./time-travel";
 
 function isPromise<T>(obj: T | Promise<T>): obj is Promise<T> {
   return (
@@ -38,17 +44,24 @@ function initializeObject<TState>(
   container: StateContainer<TState>
 ): StateContainerType<TState> {
   const obj: Partial<StateContainerType<TState>> = {};
-  // if (container instanceof TimeTravelContainer) {
-  //   obj.undo = () => container.undo();
-  //   obj.redo = () => container.redo();
-  // }
 
   Object.defineProperty(obj, "currentState", {
     get: () => container.getState()
   });
-  obj.subscribe = fn => container.subscribe(fn);
-  obj.unsubscribe = fn => container.unsubscribe(fn);
+  obj.subscribe = container.subscribe.bind(container);
+  obj.unsubscribe = container.unsubscribe.bind(container);
   return obj as StateContainerType<TState>;
+}
+
+function initializeTimeTravelFunctions<TState>(
+  obj: TimeTravelContainerType<TState>,
+  container: TimeTravelContainer<TState>
+): TimeTravelContainerType<TState> {
+  if (container instanceof TimeTravelContainer) {
+    obj.undo = container.undo.bind(container);
+    obj.redo = container.redo.bind(container);
+  }
+  return obj;
 }
 
 export function staat<TState, TTransformers extends {}>(
@@ -59,4 +72,18 @@ export function staat<TState, TTransformers extends {}>(
   const obj = initializeObject(container);
   addFunctions(obj, transformers, container);
   return obj as State<TState, TTransformers>;
+}
+
+export function timeTravelStaat<TState, TTransformers extends {}>(
+  transformers: TTransformers,
+  initialState: TState
+): TimeTravelState<TState, TTransformers> {
+  const container = new TimeTravelContainer(initialState);
+  const obj = initializeObject(container);
+  initializeTimeTravelFunctions(
+    obj as TimeTravelContainerType<TState>,
+    container
+  );
+  addFunctions(obj, transformers, container);
+  return obj as TimeTravelState<TState, TTransformers>;
 }

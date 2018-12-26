@@ -10,6 +10,7 @@ let plugins = [];
 const outputFile = 'index.js';
 
 const config = {
+  mode: 'production',
   entry: __dirname + '/src/index.tsx',
   devtool: 'source-map',
   output: {
@@ -36,7 +37,7 @@ const config = {
 
 if (env === 'build') {
   config.optimization = {
-    minimize: true
+    minimize: false
   };
 };
 

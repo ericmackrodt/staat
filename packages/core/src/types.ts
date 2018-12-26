@@ -25,6 +25,11 @@ export type TimeTravelContainerType<TState> = StateContainerType<TState> & {
 export type State<TState, TTransformers> = StateContainerType<TState> &
   TransformerSignatures<TState, TTransformers>;
 
+export type TimeTravelState<TState, TTransformers> = TimeTravelContainerType<
+  TState
+> &
+  TransformerSignatures<TState, TTransformers>;
+
 export type Subscription = () => Promise<void>;
 
 export type StateContainers = Array<State<any, any>>;
