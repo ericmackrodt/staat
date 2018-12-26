@@ -51,10 +51,7 @@ function initializeObject<TState>(
   return obj as StateContainerType<TState>;
 }
 
-export function staat<
-  TState,
-  TTransformers extends Record<string, (arg: TState, ...args: any[]) => TState>
->(
+export function staat<TState, TTransformers extends {}>(
   transformers: TTransformers,
   initialState: TState
 ): State<TState, TTransformers> {

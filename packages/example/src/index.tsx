@@ -9,7 +9,6 @@ console.log(initialState);
 
 const state = staat(transformers, initialState);
 console.log(state.currentState);
-type StateType = typeof state;
 
 const { connect, Provider } = reactStaat({ state });
 
@@ -42,7 +41,7 @@ const Calc = connect<OwnProps, StateProps>(({ state }) => {
 
 ReactDOM.render(
   <Provider>
-    <div />
+    <Calc />
   </Provider>,
   document.getElementById("entry")
 );

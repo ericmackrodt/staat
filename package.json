@@ -6,8 +6,9 @@
   "scripts": {
     "build:core": "cd packages/core && yarn build",
     "build:react": "cd packages/react && yarn build",
-    "build": "yarn build:core && yarn build:react",
-    "example": "cd packages/example && yarn start",
+    "build:example": "cd packages/example && yarn build",
+    "build": "yarn build:core && yarn build:react && yarn build:example",
+    "example": "yarn build:core && yarn build:react && cd packages/example && yarn start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
