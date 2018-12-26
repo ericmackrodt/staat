@@ -1,8 +1,8 @@
-import deepFreeze = require('deep-freeze');
-import { Subscription } from './types';
+import deepFreeze from "deep-freeze";
+import { Subscription } from "./types";
 
 export class StateContainer<T> {
-  private state: deepFreeze.DeepReadonly<T>;
+  private state: T;
   private subscriptions: Subscription[];
 
   constructor(initialState: T) {

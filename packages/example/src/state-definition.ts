@@ -1,4 +1,4 @@
-type ThisState = {
+export type ThisState = {
   count: number;
 };
 

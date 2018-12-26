@@ -1,8 +1,8 @@
-export * from './src/staat';
+export * from "./staat";
 export {
   Subscription,
   State,
   IType,
   StateContainerType,
   StateContainers
-} from './src/types';
+} from "./types";

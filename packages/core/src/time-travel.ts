@@ -1,6 +1,4 @@
 import { applyChange, diff } from "deep-diff";
-import deepFreeze = require("deep-freeze");
-import { Subscription } from "./types";
 import { StateContainer } from "./state-container";
 
 export class TimeTravelContainer<T> extends StateContainer<T> {
@@ -46,7 +44,7 @@ export class TimeTravelContainer<T> extends StateContainer<T> {
   public undo() {
     return Promise.resolve().then(() => {
       if (!this.canUndo) {
-        return;
+        return this.getState();
       }
       const diffsToApply = this.pastDiffs.pop()!;
       return this.updatePresent(diffsToApply).then(newDiffs => {
@@ -59,7 +57,7 @@ export class TimeTravelContainer<T> extends StateContainer<T> {
   public redo() {
     return Promise.resolve().then(() => {
       if (!this.canRedo) {
-        return;
+        return this.getState();
       }
       const diffsToApply = this.futureDiffs.shift()!;
       return this.updatePresent(diffsToApply).then(newDiffs => {
