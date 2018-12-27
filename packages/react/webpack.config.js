@@ -32,7 +32,27 @@ const config = {
     extensions: ['.json', '.ts', '.tsx', '.js'],
     symlinks: false,
   },
-  plugins: plugins
+  plugins: plugins,
+  externals: {
+    'react': {
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react',
+      root: 'react',
+    },
+    'create-react-context': {
+      commonjs: 'create-react-context',
+      commonjs2: 'create-react-context',
+      amd: 'create-react-context',
+      root: 'create-react-context',
+    },
+    '@staat/core': {
+      commonjs: '@staat/core',
+      commonjs2: '@staat/core',
+      amd: '@staat/core',
+      root: '@staat/core',
+    },
+  }
 };
 
 if (env === 'build') {

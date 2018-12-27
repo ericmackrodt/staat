@@ -12,7 +12,6 @@
   "author": "Eric Mackrodt",
   "license": "ISC",
   "dependencies": {
-    "@staat/core": "0.0.1",
     "create-react-context": "^0.2.3",
     "react": "^16.6.3"
   },
@@ -22,5 +21,8 @@
     "webpack": "^4.28.1",
     "webpack-cli": "^3.1.2",
     "ts-loader": "5.3.2"
+  },
+  "peerDependencies": {
+    "@staat/core": "0.0.1"
   }
 }
