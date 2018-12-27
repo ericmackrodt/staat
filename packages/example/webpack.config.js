@@ -6,8 +6,6 @@ const env = require('yargs').argv.env; // use --env with webpack 2
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-let libraryName = '@staat/core';
-
 let plugins = [
   new CleanWebpackPlugin(["build"]),
   new HtmlWebpackPlugin({
@@ -24,9 +22,6 @@ const config = {
   output: {
     path: __dirname + '/build',
     filename: outputFile,
-    library: libraryName,
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
   },
   module: {
     rules: [{

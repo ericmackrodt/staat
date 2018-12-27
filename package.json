@@ -9,12 +9,15 @@
     "build:example": "cd packages/example && yarn build",
     "build": "yarn build:core && yarn build:react && yarn build:example",
     "example": "yarn build:core && yarn build:react && cd packages/example && yarn start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^23.3.10",
+    "jest": "^23.6.0",
     "lerna": "^3.6.0",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.2.2"
   },
   "private": true,
