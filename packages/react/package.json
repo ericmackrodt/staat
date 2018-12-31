@@ -1,6 +1,6 @@
 {
   "name": "@staat/react",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -23,6 +23,7 @@
     "ts-loader": "5.3.2"
   },
   "peerDependencies": {
-    "@staat/core": "0.0.1"
+    "@staat/core": "1.0.0",
+    "@staat/merge": "0.0.1"
   }
 }

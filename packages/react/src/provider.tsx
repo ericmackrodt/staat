@@ -1,21 +1,24 @@
-import * as React from "react";
-import { State } from "@staat/core";
-import { Provider, Consumer } from "./context";
+import * as React from 'react';
+import { State } from '@staat/core';
+import { MergedStaat } from '@staat/merge';
+import { Provider, Consumer } from './context';
 
 export default function makeProvider<
   TContainers extends Record<string, State<any, any>>
 >(containers: TContainers): React.ComponentType {
   return class StaatProvider extends React.Component {
-    private mounted: boolean;
+    private _mounted: boolean;
+    private _merged: MergedStaat<TContainers>;
 
     constructor(props: {}) {
       super(props);
       this.state = {};
+      this._merged = new MergedStaat(containers);
     }
 
     private onSubscription = () => {
       return Promise.resolve().then(() => {
-        if (!this.mounted) {
+        if (!this._mounted) {
           return;
         }
 
@@ -24,27 +27,26 @@ export default function makeProvider<
     };
 
     public componentDidMount() {
-      this.mounted = true;
+      this._mounted = true;
 
-      Object.keys(containers).forEach(key =>
-        containers[key].subscribe(this.onSubscription)
-      );
+      this._merged.subscribe(this.onSubscription);
     }
 
     public componentWillUnmount() {
-      this.mounted = false;
-      Object.keys(containers).forEach(key =>
-        containers[key].unsubscribe(this.onSubscription)
-      );
+      this._mounted = false;
+      this._merged.unsubscribe(this.onSubscription);
     }
 
     public render() {
       const { children } = this.props;
       return (
         <Consumer>
-          {(localStates: TContainers | null) => {
-            const childStates: TContainers = { ...localStates, ...containers };
-            return <Provider value={childStates}>{children}</Provider>;
+          {merged => {
+            return (
+              <Provider value={{ states: merged || this._merged }}>
+                {children}
+              </Provider>
+            );
           }}
         </Consumer>
       );

@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@staat/core": "0.0.1",
-    "@staat/react": "0.0.1",
+    "@staat/core": "1.0.0",
+    "@staat/react": "1.0.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },

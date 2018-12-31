@@ -1,13 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { welcomeState, connect } from "./state";
+import { welcomeState, connect } from './state';
 
 const Welcome: React.StatelessComponent<WelcomeProps> = props => {
-  console.log("Welcome Render");
   return (
     <div>
       <h1>Welcome, {props.name}</h1>
-      <input type="text" onChange={evt => props.setName(evt.target.value)} />
+      <input type='text' onChange={evt => props.setName(evt.target.value)} />
       <button onClick={() => props.undo()}>Undo</button>
       <button onClick={() => props.redo()}>Redo</button>
     </div>
@@ -15,6 +14,9 @@ const Welcome: React.StatelessComponent<WelcomeProps> = props => {
 };
 type StateProps = {
   name?: string;
+};
+
+type TrasformerProps = {
   setName: typeof welcomeState.setName;
   undo: typeof welcomeState.undo;
   redo: typeof welcomeState.redo;
@@ -22,13 +24,19 @@ type StateProps = {
 
 type OwnProps = {};
 
-type WelcomeProps = StateProps & OwnProps;
+type WelcomeProps = StateProps & TrasformerProps & OwnProps;
 
-export default connect<OwnProps, StateProps>(({ welcomeState }) => {
-  return {
-    name: welcomeState.currentState.name,
-    setName: welcomeState.setName,
-    undo: welcomeState.undo.bind(welcomeState),
-    redo: welcomeState.redo.bind(welcomeState)
-  };
-})(Welcome);
+export default connect<OwnProps, StateProps, TrasformerProps>(
+  ({ welcomeState }) => {
+    return {
+      name: welcomeState.name
+    };
+  },
+  ({ welcomeState }) => {
+    return {
+      setName: welcomeState.setName,
+      undo: welcomeState.undo.bind(welcomeState),
+      redo: welcomeState.redo.bind(welcomeState)
+    };
+  }
+)(Welcome);

@@ -1,0 +1,16 @@
+{
+  "name": "@staat/merge",
+  "version": "0.0.1",
+  "description": "Merges multiple staats into one.",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "cross-env webpack --env build",
+    "dev": "cross-env webpack --progress --colors --watch --env dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eric Mackrodt",
+  "license": "ISC",
+  "peerDependencies": {
+    "@staat/core": "1.0.0"
+  }
+}

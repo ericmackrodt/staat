@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build:core": "cd packages/core && yarn build",
+    "build:merge": "cd packages/merge && yarn build",
     "build:react": "cd packages/react && yarn build",
     "build:example": "cd packages/example && yarn build",
-    "build": "yarn build:core && yarn build:react && yarn build:example",
-    "example": "yarn build:core && yarn build:react && cd packages/example && yarn start",
+    "build": "yarn build:core && yarn build:merge && yarn build:react",
+    "example": "yarn build && cd packages/example && yarn start",
     "test": "jest"
   },
   "author": "",

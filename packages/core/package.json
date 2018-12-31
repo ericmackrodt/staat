@@ -1,6 +1,6 @@
 {
   "name": "@staat/core",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A simple state management library",
   "main": "build/index.js",
   "typings": "build/index.d.ts",

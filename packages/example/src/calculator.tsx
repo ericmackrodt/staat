@@ -1,8 +1,7 @@
-import * as React from "react";
-import { calculatorState, connect } from "./state";
+import * as React from 'react';
+import { calculatorState, connect } from './state';
 
 const Calculator: React.StatelessComponent<CalculatorProps> = props => {
-  console.log("Calculator Render");
   return (
     <div>
       <div>Hello World</div>
@@ -17,6 +16,9 @@ const Calculator: React.StatelessComponent<CalculatorProps> = props => {
 
 type StateProps = {
   count: number;
+};
+
+type TransformerProps = {
   add: typeof calculatorState.add;
   subtract: typeof calculatorState.subtract;
   undo: typeof calculatorState.undo;
@@ -25,14 +27,20 @@ type StateProps = {
 
 type OwnProps = {};
 
-type CalculatorProps = StateProps & OwnProps;
+type CalculatorProps = TransformerProps & StateProps & OwnProps;
 
-export default connect<OwnProps, StateProps>(({ calculatorState }) => {
-  return {
-    count: calculatorState.currentState.count,
-    add: calculatorState.add,
-    subtract: calculatorState.subtract,
-    undo: calculatorState.undo.bind(calculatorState),
-    redo: calculatorState.redo.bind(calculatorState)
-  };
-})(Calculator);
+export default connect<OwnProps, StateProps, TransformerProps>(
+  ({ calculatorState }) => {
+    return {
+      count: calculatorState.count
+    };
+  },
+  ({ calculatorState }) => {
+    return {
+      add: calculatorState.add,
+      subtract: calculatorState.subtract,
+      undo: calculatorState.undo.bind(calculatorState),
+      redo: calculatorState.redo.bind(calculatorState)
+    };
+  }
+)(Calculator);
