@@ -6,6 +6,7 @@ export {
   TimeTravelTransformers,
   Subscription,
   State,
+  TimeTravelState,
   IType,
   StateContainerType,
   StateContainers

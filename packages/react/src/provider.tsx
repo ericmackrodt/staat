@@ -4,8 +4,12 @@ import { MergedStaat } from '@staat/merge';
 import { Provider, Consumer } from './context';
 
 export default function makeProvider<
-  TContainers extends Record<string, State<any, any>>
->(mergedStaat: MergedStaat<TContainers>): React.ComponentType {
+  TContainers extends Record<string, State<any, any>> = {},
+  TState = {},
+  TTransformers = {}
+>(
+  staat: MergedStaat<TContainers> | State<TState, TTransformers>
+): React.ComponentType {
   return class StaatProvider extends React.Component {
     private _mounted: boolean;
 
@@ -27,12 +31,12 @@ export default function makeProvider<
     public componentDidMount() {
       this._mounted = true;
 
-      mergedStaat.subscribe(this.onSubscription);
+      staat.subscribe(this.onSubscription);
     }
 
     public componentWillUnmount() {
       this._mounted = false;
-      mergedStaat.unsubscribe(this.onSubscription);
+      staat.unsubscribe(this.onSubscription);
     }
 
     public render() {
@@ -41,7 +45,7 @@ export default function makeProvider<
         <Consumer>
           {merged => {
             return (
-              <Provider value={{ states: merged || mergedStaat }}>
+              <Provider value={{ states: merged || staat }}>
                 {children}
               </Provider>
             );

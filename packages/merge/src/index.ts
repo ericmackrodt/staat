@@ -1,2 +1,2 @@
 export * from './merge';
-export { MergedStates, Transformers } from './types';
+export { MergedStates, MergedTransformers } from './types';

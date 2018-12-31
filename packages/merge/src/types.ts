@@ -11,7 +11,7 @@ type TransformerNames<TState> = {
 }[keyof TState];
 export type TransformersOnly<TState> = Pick<TState, TransformerNames<TState>>;
 
-export type Transformers<TStates> = {
+export type MergedTransformers<TStates> = {
   [StatesKey in keyof TStates]: TransformersOnly<TStates[StatesKey]>
 };
 

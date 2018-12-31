@@ -1,4 +1,4 @@
-import { MergedStates, Transformers, TransformersObject } from './types';
+import { MergedStates, MergedTransformers, TransformersObject } from './types';
 import { internals, Subscription, State } from '@staat/core';
 
 function mergeCurrentStates<
@@ -22,7 +22,7 @@ function getTransformers<
     string,
     { [K in keyof TStates]: { [KF in keyof TStates[K]]: Function } }
   >
->(states: TStates): Transformers<TStates> {
+>(states: TStates): MergedTransformers<TStates> {
   const ignore = [...Object.keys(internals.StateContainer.prototype)];
   return Object.keys(states).reduce(
     (obj, key) => {
@@ -49,7 +49,7 @@ export class MergedStaat<
 > {
   private _subscriptions: Subscription[];
   private _currentStates: MergedStates<TStates>;
-  private _transformers: Transformers<TStates>;
+  private _transformers: MergedTransformers<TStates>;
 
   get currentStates() {
     return this._currentStates;

@@ -1,17 +1,30 @@
-import { State } from '@staat/core';
+import { State, TimeTravelState } from '@staat/core';
 import { MergedStaat } from '@staat/merge';
-import { ReactStaat } from './types';
+import { ReactMergedStaat, ReactStaat, TimeTravelReactStaat } from './types';
 import makeConnect from './connect';
 import makeProvider from './provider';
 
 export * from '@staat/core';
 export { mergeStaats } from '@staat/merge';
 
-export default function reactStaat<
-  TContainers extends Record<string, State<any, any>>
->(mergedStaat: MergedStaat<TContainers>): ReactStaat<TContainers> {
+function reactStaat<TState, TTransformers>(
+  staat: TimeTravelState<TState, TTransformers>
+): TimeTravelReactStaat<TState, TTransformers>;
+function reactStaat<TState, TTransformers>(
+  staat: State<TState, TTransformers>
+): ReactStaat<TState, TTransformers>;
+function reactStaat<TContainers extends Record<string, State<any, any>>>(
+  mergedStaat: MergedStaat<TContainers>
+): ReactMergedStaat<TContainers>;
+function reactStaat<
+  TState = {},
+  TTransformers = {},
+  TContainers extends Record<string, State<any, any>> = {}
+>(staat: MergedStaat<TContainers> | State<TState, TTransformers>) {
   return {
-    Provider: makeProvider(mergedStaat),
-    connect: makeConnect<TContainers>()
+    Provider: makeProvider<TContainers, TState, TTransformers>(staat),
+    connect: makeConnect<TContainers, TState, TTransformers>()
   };
 }
+
+export default reactStaat;
