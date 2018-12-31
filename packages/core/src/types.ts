@@ -2,13 +2,21 @@ export interface IType<T> extends Function {
   new (...args: any[]): T;
 }
 
-export type TransformerSignatures<TState, TTransformers extends {}> = {
+export type Transformers<TTransformers extends {}> = {
   [TKey in keyof TTransformers]: TTransformers[TKey] extends (
-    currentState: TState,
+    currentState: infer TState,
     ...args: infer TArgs
   ) => unknown
     ? (...args: TArgs) => Promise<TState>
     : TTransformers[TKey]
+};
+
+export type TimeTravelTransformers<
+  TState,
+  TTransformers extends {}
+> = Transformers<TTransformers> & {
+  undo(): Promise<TState>;
+  redo(): Promise<TState>;
 };
 
 export type StateContainerType<TState> = {
@@ -23,12 +31,12 @@ export type TimeTravelContainerType<TState> = StateContainerType<TState> & {
 };
 
 export type State<TState, TTransformers> = StateContainerType<TState> &
-  TransformerSignatures<TState, TTransformers>;
+  Transformers<TTransformers>;
 
-export type TimeTravelState<TState, TTransformers> = TimeTravelContainerType<
+export type TimeTravelState<TState, TTransformers> = StateContainerType<
   TState
 > &
-  TransformerSignatures<TState, TTransformers>;
+  TimeTravelTransformers<TState, TTransformers>;
 
 export type Subscription = () => Promise<void>;
 

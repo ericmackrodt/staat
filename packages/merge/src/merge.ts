@@ -85,3 +85,9 @@ export class MergedStaat<
     this._subscriptions = this._subscriptions.filter(s => s !== fn);
   }
 }
+
+export function mergeStaats<
+  TStates extends Record<keyof TStates, State<unknown, any>>
+>(states: TStates): MergedStaat<TStates> {
+  return new MergedStaat<TStates>(states);
+}
