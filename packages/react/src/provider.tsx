@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Staat } from '@staat/core';
-import { Provider, Consumer } from './context';
+import { Provider } from './context';
 
 export default function makeProvider<TState, TTransformers>(
   staat: Staat<TState, TTransformers>
@@ -36,17 +36,7 @@ export default function makeProvider<TState, TTransformers>(
 
     public render() {
       const { children } = this.props;
-      return (
-        <Consumer>
-          {merged => {
-            return (
-              <Provider value={{ states: merged || staat }}>
-                {children}
-              </Provider>
-            );
-          }}
-        </Consumer>
-      );
+      return <Provider value={staat.currentState}>{children}</Provider>;
     }
   };
 }

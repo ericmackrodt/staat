@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { Staat } from '@staat/core';
 import { Consumer } from './context';
 
-export default function makeConnect<TState, TTransformers>() {
+export default function makeConnect<TState>() {
   return function connect<TOwnProps, TStateProps, TTransformerProps>(
     mapStateToProps: (states: TState, ownProps: TOwnProps) => TStateProps,
-    mapTransformersToProps?: (
-      staat: Staat<TState, TTransformers>
-    ) => TTransformerProps
+    mapTransformersToProps?: () => TTransformerProps
   ) {
     return (
       WrappedComponent: React.ComponentType<
@@ -15,25 +12,25 @@ export default function makeConnect<TState, TTransformers>() {
       >
     ): React.ComponentType<TOwnProps> => {
       return class StaatConnect extends React.Component<TOwnProps> {
-        private getStateProps = (staat: Staat<TState, TTransformers>) => {
-          return mapStateToProps(staat.currentState, this.props);
+        private getStateProps = (state: TState) => {
+          return mapStateToProps(state, this.props);
         };
 
-        private getTransformerProps = (staat: Staat<TState, TTransformers>) => {
+        private getTransformerProps = () => {
           if (!mapTransformersToProps) {
             return {} as TTransformerProps;
           }
-          return mapTransformersToProps(staat);
+          return mapTransformersToProps();
         };
 
         public render() {
           return (
             <Consumer>
-              {({ states }: { states: Staat<TState, TTransformers> }) => (
+              {(state: TState) => (
                 <WrappedComponent
                   {...this.props}
-                  {...this.getStateProps(states)}
-                  {...this.getTransformerProps(states)}
+                  {...this.getStateProps(state)}
+                  {...this.getTransformerProps()}
                 />
               )}
             </Consumer>

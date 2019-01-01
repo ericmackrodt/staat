@@ -7,10 +7,10 @@ export * from '@staat/core';
 
 function reactStaat<TState, TTransformers>(
   staat: Staat<TState, TTransformers>
-): ReactStaat<TState, TTransformers> {
+): ReactStaat<TState> {
   return {
     Provider: makeProvider(staat),
-    connect: makeConnect<TState, TTransformers>()
+    connect: makeConnect<TState>()
   };
 }
 
