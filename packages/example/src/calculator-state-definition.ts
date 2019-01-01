@@ -1,15 +1,16 @@
-export type ThisState = {
-  count: number;
-};
+import { scopedTransformer } from '@staat/core';
+import { CalculatorState, AppState } from './types';
 
-export const initialState: ThisState = {
+const transformer = scopedTransformer<AppState, CalculatorState>('calculator');
+
+export const initialState: CalculatorState = {
   count: 0
 };
 
-export function add(currentState: ThisState): ThisState {
+export const add = transformer((currentState: CalculatorState) => {
   return { ...currentState, count: currentState.count + 1 };
-}
+});
 
-export function subtract(currentState: ThisState): ThisState {
+export const subtract = transformer((currentState: CalculatorState) => {
   return { ...currentState, count: currentState.count - 1 };
-}
+});

@@ -1,14 +1,9 @@
 import * as React from 'react';
-import { State } from '@staat/core';
-import { MergedStaat } from '@staat/merge';
+import { Staat } from '@staat/core';
 import { Provider, Consumer } from './context';
 
-export default function makeProvider<
-  TContainers extends Record<string, State<any, any>> = {},
-  TState = {},
-  TTransformers = {}
->(
-  staat: MergedStaat<TContainers> | State<TState, TTransformers>
+export default function makeProvider<TState, TTransformers>(
+  staat: Staat<TState, TTransformers>
 ): React.ComponentType {
   return class StaatProvider extends React.Component {
     private _mounted: boolean;

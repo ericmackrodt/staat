@@ -1,7 +1,8 @@
-import { timeTravelStaat, TimeTravelTransformers } from '@staat/core';
-import reactStaat, { mergeStaats } from '@staat/react';
+import staat from '@staat/core';
+import reactStaat from '@staat/react';
 import * as calculatorStateDefinition from './calculator-state-definition';
 import * as welcomeStateDefinition from './welcome-state-definition';
+import { AppState } from './types';
 
 const {
   initialState: calcInitialState,
@@ -12,32 +13,18 @@ const {
   ...welcomeTransformers
 } = welcomeStateDefinition;
 
-export type MergedStates = {
-  calculatorState: calculatorStateDefinition.ThisState;
-  welcomeState: welcomeStateDefinition.WelcomeState;
+const initialState: AppState = {
+  calculator: calcInitialState,
+  welcome: welcomeInitialState
 };
 
-export type MergedTransformers = {
-  calculatorState: TimeTravelTransformers<
-    calculatorStateDefinition.ThisState,
-    typeof calcTransformers
-  >;
-  welcomeState: TimeTravelTransformers<
-    welcomeStateDefinition.WelcomeState,
-    typeof welcomeTransformers
-  >;
+const transformers = {
+  calculator: calcTransformers,
+  welcome: welcomeTransformers
 };
 
-export const calculatorState = timeTravelStaat(
-  calcTransformers,
-  calcInitialState
-);
+export const appState = staat(transformers, initialState);
 
-export const welcomeState = timeTravelStaat(
-  welcomeTransformers,
-  welcomeInitialState
-);
+export const { calculator, welcome } = appState;
 
-const mergedStaats = mergeStaats({ calculatorState, welcomeState });
-
-export const { connect, Provider } = reactStaat(mergedStaats);
+export const { connect, Provider } = reactStaat(appState);

@@ -1,9 +1,12 @@
-export type WelcomeState = {
-  name?: string;
-};
+import { scopedTransformer } from '@staat/core';
+import { WelcomeState, AppState } from './types';
 
 export const initialState: WelcomeState = {};
 
-export function setName(currentState: WelcomeState, name: string) {
-  return { ...currentState, name };
-}
+const transformer = scopedTransformer<AppState, WelcomeState>('welcome');
+
+export const setName = transformer(
+  (currentState: WelcomeState, name: string) => {
+    return { ...currentState, name };
+  }
+);

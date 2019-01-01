@@ -23,12 +23,6 @@ config.externals = {
     commonjs2: '@staat/core',
     amd: '@staat/core',
     root: '@staat/core'
-  },
-  '@staat/merge': {
-    commonjs: '@staat/merge',
-    commonjs2: '@staat/merge',
-    amd: '@staat/merge',
-    root: '@staat/merge'
   }
 };
 

@@ -1,18 +1,16 @@
 import { StateContainer } from './state-container';
-import { TimeTravelContainer } from './time-travel';
-export * from './staat';
+import staat from './staat';
 export {
   Transformers,
-  TimeTravelTransformers,
   Subscription,
-  State,
-  TimeTravelState,
+  Staat,
   IType,
   StateContainerType,
   StateContainers
 } from './types';
-
+export * from './scoped-transformer';
 export const internals = {
-  StateContainer,
-  TimeTravelContainer
+  StateContainer
 };
+
+export default staat;

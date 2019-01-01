@@ -11,6 +11,17 @@ export type Transformers<TTransformers extends {}> = {
     : TTransformers[TKey]
 };
 
+export type TransformersTree<TTransformers extends {}> = {
+  [TKey in keyof TTransformers]: TTransformers[TKey] extends (
+    currentState: infer TState,
+    ...args: infer TArgs
+  ) => unknown
+    ? (...args: TArgs) => Promise<TState>
+    : TTransformers[TKey] extends {}
+    ? TransformersTree<TTransformers[TKey]>
+    : TTransformers[TKey]
+};
+
 export type TimeTravelTransformers<
   TState,
   TTransformers extends {}
@@ -30,8 +41,8 @@ export type TimeTravelContainerType<TState> = StateContainerType<TState> & {
   redo(): Promise<TState>;
 };
 
-export type State<TState, TTransformers> = StateContainerType<TState> &
-  Transformers<TTransformers>;
+export type Staat<TState, TTransformers> = StateContainerType<TState> &
+  TransformersTree<TTransformers>;
 
 export type TimeTravelState<TState, TTransformers> = StateContainerType<
   TState
@@ -40,4 +51,4 @@ export type TimeTravelState<TState, TTransformers> = StateContainerType<
 
 export type Subscription = () => Promise<void>;
 
-export type StateContainers = Array<State<any, any>>;
+export type StateContainers = Array<Staat<any, any>>;

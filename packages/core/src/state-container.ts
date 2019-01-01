@@ -1,5 +1,5 @@
-import deepFreeze from "deep-freeze";
-import { Subscription } from "./types";
+import deepFreeze from 'deep-freeze';
+import { Subscription } from './types';
 
 export class StateContainer<T> {
   private state: T;
