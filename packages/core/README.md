@@ -1,18 +1,12 @@
-# Staat
+# Staat/Core
 
 ## A simple state management library.
 
-The goal of this library is to allow simple state management for smaller applications. It is meant to be simple, typescript friendly and support time travel out of the box.
+The goal of this library is to allow simple state management for smaller applications. It is meant to be simple and be typescript friendly.
 
-Staat is not a replacement for Redux by any means, you should weigh which state management system makes more sense for your project.
+Staat is not a replacement for Redux, you should weigh which state management system makes more sense for your project.
 
 This library is loosely inspired by Unstated, another really good option for state management.
-
-There are currently two libraries available.
-
-- `@staat/core` is the main state management code.
-- `@staat/react` is the library that connects staat to react.
-- [TODO] `@staat/time-travel` will be the library that adds time travel functionality to staat.
 
 ## Concepts
 
@@ -52,45 +46,6 @@ async function execution() {
   await state.add(10);
   console.log(state.currentState); // { count: 10 }
   await state.subtract(3);
-  console.log(state.currentState); // { count: 7 }
-}
-
-execution();
-```
-
-## Timetravel usage (This api is not available)
-
-```ts
-import { staat } from '@staat/core';
-
-const initialState = {
-  count: 0
-};
-
-const state = timeTravelStaat(
-  {
-    add(currentState: typeof initialState, value: number) {
-      return { ...currentState, count: currentState.count + value };
-    },
-    subtract(currentState: typeof initialState, value: number) {
-      return { ...currentState, count: currentState.count - value };
-    }
-  },
-  initialState
-);
-
-async function execution() {
-  await state.add(10);
-  console.log(state.currentState); // { count: 10 }
-  await state.subtract(3);
-  console.log(state.currentState); // { count: 7 }
-  await state.undo();
-  console.log(state.currentState); // { count: 10 }
-  await state.undo();
-  console.log(state.currentState); // { count: 0 }
-  await state.redo();
-  console.log(state.currentState); // { count: 10 }
-  await state.redo();
   console.log(state.currentState); // { count: 7 }
 }
 
