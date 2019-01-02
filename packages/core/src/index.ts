@@ -1,5 +1,6 @@
 import { StateContainer } from './state-container';
 import staat from './staat';
+import { isTransformer, isPromise } from './utils';
 export {
   Transformers,
   Subscription,
@@ -10,7 +11,9 @@ export {
 } from './types';
 export * from './scoped-transformer';
 export const internals = {
-  StateContainer
+  StateContainer,
+  isTransformer,
+  isPromise
 };
 
 export default staat;

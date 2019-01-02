@@ -36,19 +36,16 @@ export type StateContainerType<TState> = {
   unsubscribe(fn: Subscription): void;
 };
 
-export type TimeTravelContainerType<TState> = StateContainerType<TState> & {
-  undo(): Promise<TState>;
-  redo(): Promise<TState>;
-};
-
 export type Staat<TState, TTransformers> = StateContainerType<TState> &
   TransformersTree<TTransformers>;
 
-export type TimeTravelState<TState, TTransformers> = StateContainerType<
-  TState
-> &
-  TimeTravelTransformers<TState, TTransformers>;
-
 export type Subscription = () => Promise<void>;
 
-export type StateContainers = Array<Staat<any, any>>;
+export type TransformerSignature<TState> = (
+  currentState: TState,
+  ...args: any[]
+) => TState;
+
+export type TransformerOrObject<TState> =
+  | TransformerSignature<TState>
+  | Record<string, TransformerSignature<TState>>;

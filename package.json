@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build:core": "cd packages/core && yarn build",
-    "build:merge": "cd packages/merge && yarn build",
+    "build:time-travel": "cd packages/time-travel && yarn build",
     "build:react": "cd packages/react && yarn build",
     "build:example": "cd packages/example && yarn build",
-    "build": "yarn build:core && yarn build:react",
+    "build": "yarn build:core && yarn build:time-travel && yarn build:react",
     "example": "yarn build && cd packages/example && yarn start",
     "test": "jest"
   },

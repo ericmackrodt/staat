@@ -1,20 +1,6 @@
 import { StateContainer } from './state-container';
-import { StateContainerType, Staat } from './types';
-import { isPromise } from './utils';
-type TransformerSignature<TState> = (
-  currentState: TState,
-  ...args: any[]
-) => TState;
-
-type TransformerOrObject<TState> =
-  | TransformerSignature<TState>
-  | Record<string, TransformerSignature<TState>>;
-
-function isTransformer<TState>(
-  input: TransformerOrObject<TState>
-): input is TransformerSignature<TState> {
-  return typeof input === 'function';
-}
+import { StateContainerType, Staat, TransformerOrObject } from './types';
+import { isPromise, isTransformer } from './utils';
 
 function addTransformers<
   TState,

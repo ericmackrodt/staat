@@ -1,7 +1,7 @@
 {
-  "name": "@staat/core",
-  "version": "1.1.0",
-  "description": "A simple state management library",
+  "name": "@staat/time-travel",
+  "version": "0.0.1",
+  "description": "",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "scripts": {
@@ -12,13 +12,16 @@
   "author": "Eric Mackrodt",
   "license": "ISC",
   "dependencies": {
-    "deep-freeze": "^0.0.1"
+    "deep-diff": "^1.0.2"
   },
   "devDependencies": {
-    "@types/deep-freeze": "^0.1.1",
+    "@types/deep-diff": "^0.0.31",
     "cross-env": "^5.2.0",
     "webpack": "^4.28.1",
     "webpack-cli": "^3.1.2",
     "ts-loader": "5.3.2"
+  },
+  "peerDependencies": {
+    "@staat/core": "1.1.0"
   }
 }
