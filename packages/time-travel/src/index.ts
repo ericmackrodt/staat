@@ -1,6 +1,5 @@
-import { applyChange, diff } from 'deep-diff';
-import { scopedTransformer, internals } from '@staat/core';
-import { TransformerOrObject } from '@staat/core/build/types';
+import { applyChange, diff } from "deep-diff";
+import { internals, ScopedTransformer } from "@staat/core";
 
 export type TimeTravelState<TState> = {
   _isTimeTraveler: boolean;
@@ -9,29 +8,24 @@ export type TimeTravelState<TState> = {
   present: TState;
 };
 
-export type TimeTravelTransformer<TState, TArgs extends any[]> = (
-  currentState: TimeTravelState<TState>,
-  ...args: TArgs
-) => TimeTravelState<TState> | Promise<TimeTravelState<TState>>;
+export type ReturnState<TState> = TimeTravelState<TState> | TState;
 
-export type Transformer<TState> = (
+export type Transformer<TState, TArgs extends any[]> = (
   currentState: TState,
-  ...args: any[]
+  ...args: TArgs
 ) => TState | Promise<TState>;
 
-export type TimeTravelTransformers<
-  TState extends {},
-  TTransformers extends Transformer<TState>
-> = TTransformers & {
+export type TimeTravelTransformers<TState, TTransformers> = TTransformers & {
   undo(currentState: TimeTravelState<TState>): TimeTravelState<TState>;
   redo(currentState: TimeTravelState<TState>): TimeTravelState<TState>;
 };
 
 export type TimeTravelStaat<
   TState,
-  TTransformers extends Transformer<TState>
+  TTransformers extends Record<keyof TTransformers, Transformer<TState, any[]>>,
+  TScope = TState
 > = {
-  initialState: TimeTravelState<TState>;
+  initialState: TimeTravelState<TScope>;
   transformers: TimeTravelTransformers<TState, TTransformers>;
 };
 
@@ -45,6 +39,12 @@ export const isTimeTravelState = <TState>(
   );
 };
 
+function isScopedTransformer<T, TArgs extends any[]>(
+  transformer: ScopedTransformer<T, TArgs> | Transformer<T, TArgs>
+): transformer is ScopedTransformer<T, TArgs> {
+  return !!(transformer as ScopedTransformer<T, TArgs>).scope;
+}
+
 export function canUndo<TState>(state: TimeTravelState<TState>) {
   return !!state.pastDiffs.length;
 }
@@ -53,12 +53,12 @@ export function canRedo<TState>(state: TimeTravelState<TState>) {
   return !!state.futureDiffs.length;
 }
 
-function resolveTimeTravel<TState>(
-  currentState: TimeTravelState<TState>,
-  newState: TState
-): TimeTravelState<TState> {
-  const current: TState = JSON.parse(JSON.stringify(newState));
-  const difference = diff(current, currentState);
+function timeTravelTransformer<TScope>(
+  currentState: TimeTravelState<TScope>,
+  newState: TScope
+): TimeTravelState<TScope> {
+  const current: TScope = JSON.parse(JSON.stringify(newState));
+  const difference = diff(current, currentState.present);
   return {
     ...currentState,
     pastDiffs: [...currentState.pastDiffs, difference],
@@ -67,18 +67,50 @@ function resolveTimeTravel<TState>(
   };
 }
 
+function resolveTimeTravel<TState extends TimeTravelState<{}> | {}>(
+  currentState: TState,
+  newState: TState,
+  scope?: string
+): TState {
+  if (scope && !isTimeTravelState(currentState)) {
+    const newScope = internals.getScope<TState, any>(
+      newState,
+      scope + ".present"
+    );
+    const currentScope = internals.getScope<TState, TimeTravelState<any>>(
+      currentState,
+      scope
+    );
+    const result = timeTravelTransformer(currentScope, newScope);
+    return internals.setScope<TimeTravelState<any>, TState>(
+      { ...currentState },
+      result,
+      scope
+    );
+  }
+
+  if (isTimeTravelState(currentState) && isTimeTravelState(newState)) {
+    return timeTravelTransformer<{}>(currentState, newState.present) as TState;
+  }
+
+  return { ...currentState };
+}
+
 function createTimeTravelTransformer<TState, TArgs extends any[]>(
-  transformer: (
-    currentState: TState,
-    ...args: TArgs
-  ) => TState | Promise<TState>
+  transformer: ScopedTransformer<TState, TArgs> | Transformer<TState, TArgs>
 ) {
-  return (currentState: TimeTravelState<TState>, ...args: TArgs) => {
-    const result = transformer(currentState.present, ...args);
+  const scope = isScopedTransformer(transformer)
+    ? transformer.scope
+    : undefined;
+
+  return (currentState: TState, ...args: TArgs) => {
+    const result = transformer(currentState, ...args);
     if (internals.isPromise(result)) {
-      return result.then(state => resolveTimeTravel(currentState, state));
+      return result.then(state =>
+        resolveTimeTravel(currentState, state, scope)
+      );
     }
-    return resolveTimeTravel(currentState, result);
+    return resolveTimeTravel(currentState, result, scope);
   };
 }
 
@@ -128,25 +160,26 @@ function createRedo<TState>() {
   };
 }
 
+function getKeys<TObj>(obj: TObj): (keyof TObj)[] {
+  return Object.keys(obj) as (keyof TObj)[];
+}
+
 export function timeTravelTransformers<
-  TState extends {},
-  TTransformers extends Record<string, Transformer<TState>>,
-  TScope = {}
->(transformers: TTransformers, scope?: string) {
-  const scoped = scope
-    ? scopedTransformer<TState, TimeTravelState<TScope>>(scope)
-    : undefined;
-  const newTransformers = Object.keys(transformers).reduce(
+  TState,
+  TTransformers extends Record<keyof TTransformers, Transformer<any, any[]>>
+>(transformers: TTransformers): TimeTravelTransformers<TState, TTransformers> {
+  const newTransformers: TimeTravelTransformers<
+    TState,
+    TTransformers
+  > = getKeys(transformers).reduce(
     (obj, key) => {
       const current = transformers[key];
-      obj[key] = scoped
-        ? scoped(createTimeTravelTransformer<TScope, any[]>(current))
-        : createTimeTravelTransformer<TState, any[]>(current);
+      obj[key] = createTimeTravelTransformer<TState, any[]>(current);
 
       return obj;
     },
-    {} as Record<string, TimeTravelTransformer<TScope, any[]>>
-  );
+    {} as Record<keyof TTransformers, Transformer<TState, any[]>>
+  ) as TimeTravelTransformers<TState, TTransformers>;
 
   newTransformers.undo = createUndo();
   newTransformers.redo = createRedo();
@@ -154,9 +187,9 @@ export function timeTravelTransformers<
   return newTransformers;
 }
 
-export function timeTravelInitialState<TState>(
-  state: TState
-): TimeTravelState<TState> {
+export function timeTravelInitialState<TScope>(
+  state: TScope
+): TimeTravelState<TScope> {
   return {
     _isTimeTraveler: true,
     pastDiffs: [],
@@ -167,11 +200,12 @@ export function timeTravelInitialState<TState>(
 
 export function timeTravel<
   TState,
-  TTransformers extends Record<string, TransformerOrObject<TState>>
+  TTransformers extends Record<keyof TTransformers, Transformer<any, any[]>>,
+  TScope
 >(
-  state: TState,
+  state: TScope,
   transformers: TTransformers
-): TimeTravelStaat<TState, TTransformers> {
+): TimeTravelStaat<TState, TTransformers, TScope> {
   return {
     initialState: timeTravelInitialState(state),
     transformers: timeTravelTransformers(transformers)

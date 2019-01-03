@@ -49,3 +49,12 @@ export type TransformerSignature<TState> = (
 export type TransformerOrObject<TState> =
   | TransformerSignature<TState>
   | Record<string, TransformerSignature<TState>>;
+
+export type ScopedTransformer<
+  TState extends Record<keyof TState, unknown>,
+  TArgs extends any[]
+> = {
+  (currentState: TState, ...args: TArgs): TState | Promise<TState>;
+} & {
+  scope: string;
+};
