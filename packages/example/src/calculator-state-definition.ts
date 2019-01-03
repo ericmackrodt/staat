@@ -1,42 +1,26 @@
 import { scopedTransformer } from "@staat/core";
 import { CalculatorState, AppState } from "./types";
-import { TimeTravelState } from "@staat/time-travel";
 
-const transformer = scopedTransformer<
-  AppState,
-  TimeTravelState<CalculatorState>
->("calculator");
+const transformer = scopedTransformer<AppState, CalculatorState>("calculator");
 
 export const initialState: CalculatorState = {
   count: 0
 };
 
 export const add = transformer(
-  (
-    currentState: TimeTravelState<CalculatorState>,
-    val: number
-  ): TimeTravelState<CalculatorState> => {
+  (currentState: CalculatorState, val: number): CalculatorState => {
     return {
       ...currentState,
-      present: {
-        ...currentState.present,
-        count: currentState.present.count + val
-      }
+      count: currentState.count + val
     };
   }
 );
 
 export const subtract = transformer(
-  (
-    currentState: TimeTravelState<CalculatorState>,
-    val: number
-  ): TimeTravelState<CalculatorState> => {
+  (currentState: CalculatorState, val: number): CalculatorState => {
     return {
       ...currentState,
-      present: {
-        ...currentState.present,
-        count: currentState.present.count - val
-      }
+      count: currentState.count - val
     };
   }
 );

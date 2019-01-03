@@ -32,7 +32,7 @@ type CalculatorProps = TransformerProps & StateProps & OwnProps;
 export default connect<OwnProps, StateProps, TransformerProps>(
   ({ calculator }) => {
     return {
-      count: calculator.present.count
+      count: calculator.count
     };
   },
   () => {

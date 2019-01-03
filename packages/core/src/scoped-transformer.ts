@@ -1,5 +1,4 @@
 import { isPromise, getScope, setScope } from "./utils";
-import { ScopedTransformer } from "./types";
 
 export function scopedTransformer<
   TState extends Record<keyof TState, unknown>,
@@ -10,12 +9,8 @@ export function scopedTransformer<
       currentScope: TScope,
       ...args: TArgs
     ) => TScope | Promise<TScope>
-  ): ScopedTransformer<TState, TArgs> {
-    const transformer = function(
-      this: ScopedTransformer<TState, TArgs>,
-      currentState: TState,
-      ...args: TArgs
-    ) {
+  ) {
+    return function(currentState: TState, ...args: TArgs) {
       const s = getScope<TState, TScope>(currentState, scope);
       const result = definition(s, ...args);
       if (isPromise(result)) {
@@ -24,8 +19,6 @@ export function scopedTransformer<
         );
       }
       return setScope({ ...currentState }, result, scope);
-    } as ScopedTransformer<TState, TArgs>;
-    transformer.scope = scope;
-    return transformer;
+    };
   };
 }

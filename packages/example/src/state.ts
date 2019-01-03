@@ -13,18 +13,13 @@ const {
   ...welcomeTransformers
 } = welcomeStateDefinition;
 
-const {
-  initialState: timeTravelCalcInitialState,
-  transformers: timeTravelCalcTransformers
-} = timeTravel(calcInitialState, calcTransformers);
-
 const initialState = {
-  calculator: timeTravelCalcInitialState,
+  calculator: calcInitialState,
   welcome: welcomeInitialState
 };
 
 const transformers = {
-  calculator: timeTravelCalcTransformers,
+  calculator: timeTravel(calcTransformers, "calculator"),
   welcome: welcomeTransformers
 };
 

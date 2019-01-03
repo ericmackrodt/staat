@@ -1,21 +1,16 @@
-import { StateContainer } from "./state-container";
 import staat from "./staat";
-import { isTransformer, isPromise, getScope, setScope } from "./utils";
+import { isPromise, getScope } from "./utils";
 export {
   Transformers,
   Subscription,
   Staat,
   IType,
-  StateContainerType,
-  ScopedTransformer
+  StateContainerType
 } from "./types";
 export * from "./scoped-transformer";
 export const internals = {
-  StateContainer,
-  isTransformer,
   isPromise,
-  getScope,
-  setScope
+  getScope
 };
 
 export default staat;
