@@ -1,15 +1,9 @@
-import { internals, scopedTransformer } from 'staat';
-import { TimeTravelContainer } from './time-travel-container';
+import { internals, scopedTransformer } from "staat";
+import { TimeTravelContainer } from "./time-travel-container";
+import { TimeTravelTransformers, Transformer } from "./types";
 
-export type Transformer<TState, TArgs extends any[]> = (
-  currentState: TState,
-  ...args: TArgs
-) => TState | Promise<TState>;
-
-export type TimeTravelTransformers<TState, TTransformers> = TTransformers & {
-  undo(currentState: TState): TState | Promise<TState>;
-  redo(currentState: TState): TState | Promise<TState>;
-};
+const getKeys = <TObj>(obj: TObj): (keyof TObj)[] =>
+  Object.keys(obj) as (keyof TObj)[];
 
 function udpateHistory<TState>(
   currentState: TState,
@@ -57,10 +51,6 @@ function createRedo<TState>(container: TimeTravelContainer<TState>) {
   return (currentState: TState): TState => {
     return container.redo(currentState);
   };
-}
-
-function getKeys<TObj>(obj: TObj): (keyof TObj)[] {
-  return Object.keys(obj) as (keyof TObj)[];
 }
 
 export function timeTravelTransformers<
