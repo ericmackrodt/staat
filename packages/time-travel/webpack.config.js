@@ -6,16 +6,16 @@ const base = require('../../config/webpack.config.base');
 const config = base(
   __dirname,
   './src/index.ts',
-  '@staat/time-travel',
+  'staat-timetravel',
   'index.js'
 );
 
 config.externals = {
-  '@staat/core': {
-    commonjs: '@staat/core',
-    commonjs2: '@staat/core',
-    amd: '@staat/core',
-    root: '@staat/core'
+  staat: {
+    commonjs: 'staat',
+    commonjs2: 'staat',
+    amd: 'staat',
+    root: 'staat'
   },
   'deep-diff': {
     commonjs: 'deep-diff',

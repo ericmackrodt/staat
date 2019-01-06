@@ -1,5 +1,5 @@
-import { internals, scopedTransformer } from "@staat/core";
-import { TimeTravelContainer } from "./time-travel-container";
+import { internals, scopedTransformer } from 'staat';
+import { TimeTravelContainer } from './time-travel-container';
 
 export type Transformer<TState, TArgs extends any[]> = (
   currentState: TState,

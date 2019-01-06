@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "staat": "1.1.0",
-    "staat-timetravel": "0.0.1",
-    "staat-react": "1.1.0",
+    "staat": "1.1.1-beta.2",
+    "staat-timetravel": "1.0.0-beta.1",
+    "staat-react": "1.1.1-beta.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },
@@ -25,5 +25,8 @@
     "webpack": "^4.28.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.14"
+  },
+  "peerDependencies": {
+    "staat": "1.1.1-beta.2"
   }
 }
