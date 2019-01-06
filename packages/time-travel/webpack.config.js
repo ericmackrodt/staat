@@ -16,6 +16,12 @@ config.externals = {
     commonjs2: '@staat/core',
     amd: '@staat/core',
     root: '@staat/core'
+  },
+  'deep-diff': {
+    commonjs: 'deep-diff',
+    commonjs2: 'deep-diff',
+    amd: 'deep-diff',
+    root: 'deep-diff'
   }
 };
 
