@@ -24,7 +24,7 @@ This library is loosely inspired by Unstated, another really good option for sta
 ## Basic usage
 
 ```ts
-import staat from '@staat/core';
+import staat from 'staat';
 
 const initialState = {
   count: 0

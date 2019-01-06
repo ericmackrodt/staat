@@ -1,9 +1,9 @@
-import { Staat } from '@staat/core';
+import { Staat } from 'staat';
 import { ReactStaat } from './types';
 import makeConnect from './connect';
 import makeProvider from './provider';
 
-export * from '@staat/core';
+export * from 'staat';
 
 function reactStaat<TState, TTransformers>(
   staat: Staat<TState, TTransformers>

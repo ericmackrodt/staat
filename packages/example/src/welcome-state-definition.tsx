@@ -1,4 +1,4 @@
-import { scopedTransformer } from '@staat/core';
+import { scopedTransformer } from 'staat';
 import { WelcomeState, AppState } from './types';
 
 export const initialState: WelcomeState = {};

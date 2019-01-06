@@ -1,5 +1,5 @@
-import staat from '@staat/core';
-import reactStaat from '@staat/react';
+import staat from 'staat';
+import reactStaat from 'staat-react';
 import * as calculatorStateDefinition from './calculator-state-definition';
 import * as welcomeStateDefinition from './welcome-state-definition';
 import { AppState } from './types';

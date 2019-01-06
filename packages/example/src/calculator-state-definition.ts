@@ -1,4 +1,4 @@
-import { scopedTransformer } from '@staat/core';
+import { scopedTransformer } from 'staat';
 import { CalculatorState, AppState } from './types';
 
 const transformer = scopedTransformer<AppState, CalculatorState>('calculator');
