@@ -1,5 +1,5 @@
 {
-  "name": "@staat/example",
+  "name": "staat-example",
   "version": "0.0.1",
   "description": "",
   "scripts": {
@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@staat/core": "1.0.0",
-    "@staat/time-travel": "0.0.1",
-    "@staat/react": "1.0.0",
+    "staat": "1.1.0",
+    "staat-timetravel": "0.0.1",
+    "staat-react": "1.1.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },

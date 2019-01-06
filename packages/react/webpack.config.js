@@ -3,7 +3,7 @@
 //https://github.com/krasimir/webpack-library-starter/blob/master/webpack.config.js
 const base = require('../../config/webpack.config.base');
 
-const config = base(__dirname, './src/index.tsx', '@staat/react', 'index.js');
+const config = base(__dirname, './src/index.tsx', 'staat-react', 'index.js');
 
 config.externals = {
   react: {
@@ -18,11 +18,11 @@ config.externals = {
     amd: 'create-react-context',
     root: 'create-react-context'
   },
-  '@staat/core': {
-    commonjs: '@staat/core',
-    commonjs2: '@staat/core',
-    amd: '@staat/core',
-    root: '@staat/core'
+  staat: {
+    commonjs: 'staat',
+    commonjs2: 'staat',
+    amd: 'staat',
+    root: 'staat'
   }
 };
 

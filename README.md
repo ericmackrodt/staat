@@ -10,9 +10,9 @@ This library is loosely inspired by Unstated, another really good option for sta
 
 There are currently two libraries available.
 
-- `@staat/core` is the main state management code.
-- `@staat/react` is the library that connects staat to react.
-- [TODO] `@staat/time-travel` will be the library that adds time travel functionality to staat.
+- `staat` is the main state management code.
+- `staat-react` is the library that connects staat to react.
+- [TODO] `staat-timetravel` will be the library that adds time travel functionality to staat.
 
 ## Concepts
 
@@ -30,7 +30,7 @@ There are currently two libraries available.
 ## Basic usage
 
 ```ts
-import staat from '@staat/core';
+import staat from 'staat';
 
 const initialState = {
   count: 0
@@ -61,7 +61,7 @@ execution();
 ## Timetravel usage (This api is not available)
 
 ```ts
-import { staat } from '@staat/core';
+import { staat } from 'staat';
 
 const initialState = {
   count: 0

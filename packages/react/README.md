@@ -5,8 +5,8 @@
 ## Basic usage
 
 ```tsx
-import staat from '@staat/core';
-import reactStaat from '@staat/react';
+import staat from 'staat';
+import reactStaat from 'staat-react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 

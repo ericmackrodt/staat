@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Staat } from '@staat/core';
+import { Staat } from 'staat';
 import { Provider } from './context';
 
 export default function makeProvider<TState, TTransformers>(
