@@ -60,6 +60,14 @@ describe("TimeTravelContainer", () => {
       expect(sut.canUndo).toBe(false);
       expect(sut.canRedo).toBe(true);
     });
+
+    it("returns the same state if cannot undo", () => {
+      currentState = sut.undo(currentState);
+      currentState = sut.undo(currentState);
+      currentState = sut.undo(currentState);
+      const result = sut.undo(currentState);
+      expect(result).toBe(currentState);
+    });
   });
 
   describe("redo", () => {
@@ -103,6 +111,14 @@ describe("TimeTravelContainer", () => {
       currentState = sut.redo(currentState);
       expect(sut.canUndo).toBe(true);
       expect(sut.canRedo).toBe(false);
+    });
+
+    it("returns the same state if cannot redo", () => {
+      currentState = sut.redo(currentState);
+      currentState = sut.redo(currentState);
+      currentState = sut.redo(currentState);
+      const result = sut.redo(currentState);
+      expect(result).toBe(currentState);
     });
   });
 });
