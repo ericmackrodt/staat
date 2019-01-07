@@ -1,5 +1,5 @@
-import { applyChange, diff } from "deep-diff";
-import { StateContainer } from "./state-container";
+import { applyChange, diff } from 'deep-diff';
+import { StateContainer } from './state-container';
 
 export class TimeTravelContainer<T> extends StateContainer<T> {
   private pastDiffs: deepDiff.IDiff[][];

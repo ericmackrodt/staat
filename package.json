@@ -12,8 +12,9 @@
     "example": "yarn build && cd packages/example && yarn start",
     "bootstrap": "lerna bootstrap",
     "test": "jest --coverage",
-    "travis": "yarn test",
-    "coveralls": "yarn test && cat ./coverage/lcov.info | coveralls"
+    "lint": "tslint 'packages/**/*.{ts,tsx}' -c ./tslint.json  -e \"**/node_modules/**\"",
+    "travis": "yarn lint && yarn test",
+    "coveralls": "yarn lint && yarn test && cat ./coverage/lcov.info | coveralls"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +23,12 @@
     "coveralls": "^3.0.2",
     "jest": "^23.6.0",
     "lerna": "^3.8.5",
+    "prettier": "^1.15.3",
     "ts-jest": "^23.10.5",
+    "tslint": "^5.12.0",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-react": "^3.6.0",
+    "tslint-react-a11y": "^1.0.0",
     "typescript": "^3.2.2"
   },
   "private": true,

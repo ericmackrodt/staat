@@ -16,12 +16,12 @@ const {
 
 const initialState = {
   calculator: calcInitialState,
-  welcome: welcomeInitialState
+  welcome: welcomeInitialState,
 };
 
 const transformers = {
   calculator: timeTravel(calcTransformers, 'calculator'),
-  welcome: welcomeTransformers
+  welcome: welcomeTransformers,
 };
 
 export const appState = staat(transformers, initialState);

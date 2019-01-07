@@ -1,21 +1,21 @@
-import { internals, scopedTransformer } from "staat";
-import { TimeTravelContainer } from "./time-travel-container";
-import { TimeTravelTransformers, Transformer } from "./types";
+import { internals, scopedTransformer } from 'staat';
+import { TimeTravelContainer } from './time-travel-container';
+import { TimeTravelTransformers, Transformer } from './types';
 
-const getKeys = <TObj>(obj: TObj): (keyof TObj)[] =>
-  Object.keys(obj) as (keyof TObj)[];
+const getKeys = <TObj>(obj: TObj): Array<keyof TObj> =>
+  Object.keys(obj) as Array<keyof TObj>;
 
 function udpateHistory<TState>(
   currentState: TState,
   newState: TState,
   container: TimeTravelContainer<TState>,
-  scope?: string
+  scope?: string,
 ): TState {
   if (scope) {
     const newScope = internals.getScope<TState, any>(newState, scope);
     const currentScope = internals.getScope<TState, TState>(
       currentState,
-      scope
+      scope,
     );
     container.setPresent(currentScope, newScope);
   } else {
@@ -28,13 +28,13 @@ function udpateHistory<TState>(
 function createTimeTravelTransformer<TState, TArgs extends any[]>(
   transformer: Transformer<TState, TArgs>,
   container: TimeTravelContainer<TState>,
-  scope?: string
+  scope?: string,
 ) {
   return (currentState: TState, ...args: TArgs) => {
     const result = transformer(currentState, ...args);
     if (internals.isPromise(result)) {
       return result.then(state =>
-        udpateHistory(currentState, state, container, scope)
+        udpateHistory(currentState, state, container, scope),
       );
     }
     return udpateHistory(currentState, result, container, scope);
@@ -59,7 +59,7 @@ export function timeTravelTransformers<
 >(
   transformers: TTransformers,
   container: TimeTravelContainer<TState>,
-  scope?: string
+  scope?: string,
 ): TimeTravelTransformers<TState, TTransformers> {
   const newTransformers: TimeTravelTransformers<
     TState,
@@ -70,12 +70,12 @@ export function timeTravelTransformers<
       obj[key] = createTimeTravelTransformer<TState, any[]>(
         current,
         container,
-        scope
+        scope,
       );
 
       return obj;
     },
-    {} as Record<keyof TTransformers, Transformer<TState, any[]>>
+    {} as Record<keyof TTransformers, Transformer<TState, any[]>>,
   ) as TimeTravelTransformers<TState, TTransformers>;
 
   const scoped = scope ? scopedTransformer<TState, TState>(scope) : undefined;
@@ -95,7 +95,7 @@ export function timeTravel<
   TTransformers extends Record<keyof TTransformers, Transformer<any, any[]>>
 >(
   transformers: TTransformers,
-  scope?: string
+  scope?: string,
 ): TimeTravelTransformers<TState, TTransformers> {
   const container = new TimeTravelContainer<TState>();
   return timeTravelTransformers(transformers, container, scope);

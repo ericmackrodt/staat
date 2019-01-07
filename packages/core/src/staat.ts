@@ -8,34 +8,34 @@ function addTransformers<
 >(
   obj: Record<string, any>,
   transformers: TTransformers,
-  container: StateContainer<TState>
+  container: StateContainer<TState>,
 ) {
-  return Object.keys(transformers).reduce((obj, key) => {
+  return Object.keys(transformers).reduce((acc, key) => {
     const current = transformers[key];
     if (isTransformer(current)) {
-      obj[key] = function(...args: any[]) {
+      acc[key] = function(...args: any[]) {
         const state = container.getState();
         const result = current(state, ...args);
         if (isPromise(result)) {
-          return result.then(state => container.setState(state));
+          return result.then(s => container.setState(s));
         }
         return container.setState(result);
       };
     } else {
-      obj[key] = addTransformers({}, current, container);
+      acc[key] = addTransformers({}, current, container);
     }
 
-    return obj;
+    return acc;
   }, obj);
 }
 
 function initializeObject<TState>(
-  container: StateContainer<TState>
+  container: StateContainer<TState>,
 ): StateContainerType<TState> {
   const obj: Partial<StateContainerType<TState>> = {};
 
   Object.defineProperty(obj, 'currentState', {
-    get: () => container.getState()
+    get: () => container.getState(),
   });
   obj.subscribe = container.subscribe.bind(container);
   obj.unsubscribe = container.unsubscribe.bind(container);
@@ -44,7 +44,7 @@ function initializeObject<TState>(
 
 export default function staat<TState, TTransformers extends {}>(
   transformers: TTransformers,
-  initialState: TState
+  initialState: TState,
 ): Staat<TState, TTransformers> {
   const container = new StateContainer(initialState);
   const obj = initializeObject(container);

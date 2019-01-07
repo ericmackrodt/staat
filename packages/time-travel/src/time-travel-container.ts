@@ -1,4 +1,4 @@
-import { applyChange, diff } from "deep-diff";
+import { applyChange, diff } from 'deep-diff';
 
 export class TimeTravelContainer<T> {
   private pastDiffs: deepDiff.IDiff[][];
@@ -14,7 +14,7 @@ export class TimeTravelContainer<T> {
     const newDiffs = diff(current, state);
     return {
       newDiffs,
-      current
+      current,
     };
   }
 
@@ -44,7 +44,7 @@ export class TimeTravelContainer<T> {
     this.futureDiffs = [newDiffs, ...this.futureDiffs];
     return {
       ...state,
-      ...current
+      ...current,
     };
   }
 
@@ -58,7 +58,7 @@ export class TimeTravelContainer<T> {
     this.pastDiffs = [...this.pastDiffs, newDiffs];
     return {
       ...state,
-      ...current
+      ...current,
     };
   }
 }

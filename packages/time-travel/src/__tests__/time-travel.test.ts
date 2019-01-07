@@ -1,5 +1,5 @@
-describe("TimeTravel", () => {
-  it("does", () => {
+describe('TimeTravel', () => {
+  it('does', () => {
     expect(true).toBe(true);
   });
 });

@@ -1,5 +1,5 @@
-import * as React from "react";
-import { calculator, connect } from "./state";
+import * as React from 'react';
+import { calculator as calculatorTransformers, connect } from './state';
 
 const Calculator: React.StatelessComponent<CalculatorProps> = props => {
   return (
@@ -19,10 +19,10 @@ type StateProps = {
 };
 
 type TransformerProps = {
-  add: typeof calculator.add;
-  subtract: typeof calculator.subtract;
-  undo: typeof calculator.undo;
-  redo: typeof calculator.redo;
+  add: typeof calculatorTransformers.add;
+  subtract: typeof calculatorTransformers.subtract;
+  undo: typeof calculatorTransformers.undo;
+  redo: typeof calculatorTransformers.redo;
 };
 
 type OwnProps = {};
@@ -32,15 +32,15 @@ type CalculatorProps = TransformerProps & StateProps & OwnProps;
 export default connect<OwnProps, StateProps, TransformerProps>(
   ({ calculator }) => {
     return {
-      count: calculator.count
+      count: calculator.count,
     };
   },
   () => {
     return {
-      add: calculator.add,
-      subtract: calculator.subtract,
-      undo: calculator.undo,
-      redo: calculator.redo
+      add: calculatorTransformers.add,
+      subtract: calculatorTransformers.subtract,
+      undo: calculatorTransformers.undo,
+      redo: calculatorTransformers.redo,
     };
-  }
+  },
 )(Calculator);

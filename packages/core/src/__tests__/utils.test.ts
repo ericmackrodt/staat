@@ -1,39 +1,39 @@
-import { setScope } from "../utils";
+import { setScope } from '../utils';
 
-describe("utils", () => {
-  describe("setScope", () => {
-    it("should build correct object", () => {
+describe('utils', () => {
+  describe('setScope', () => {
+    it('should build correct object', () => {
       const state = {
         level1: {
-          name: "Test"
-        }
+          name: 'Test',
+        },
       };
 
-      const result = setScope(state, { name: "Another" }, "level1");
+      const result = setScope(state, { name: 'Another' }, 'level1');
       expect(result).toEqual({
         level1: {
-          name: "Another"
-        }
+          name: 'Another',
+        },
       });
       expect(result).not.toBe(state);
     });
 
-    it("should build correct object with multiple levels", () => {
+    it('should build correct object with multiple levels', () => {
       const state = {
         level1: {
           level2: {
-            name: "Test"
-          }
-        }
+            name: 'Test',
+          },
+        },
       };
 
-      const result = setScope(state, { name: "Another" }, "level1.level2");
+      const result = setScope(state, { name: 'Another' }, 'level1.level2');
       expect(result).toEqual({
         level1: {
           level2: {
-            name: "Another"
-          }
-        }
+            name: 'Another',
+          },
+        },
       });
       expect(result).not.toBe(state);
     });

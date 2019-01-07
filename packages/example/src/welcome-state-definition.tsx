@@ -8,5 +8,5 @@ const transformer = scopedTransformer<AppState, WelcomeState>('welcome');
 export const setName = transformer(
   (currentState: WelcomeState, name: string) => {
     return { ...currentState, name };
-  }
+  },
 );

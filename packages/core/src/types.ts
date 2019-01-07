@@ -1,6 +1,4 @@
-export interface IType<T> extends Function {
-  new (...args: any[]): T;
-}
+export type IType<T> = new (...args: any[]) => T;
 
 export type Transformers<TTransformers extends {}> = {
   [TKey in keyof TTransformers]: TTransformers[TKey] extends (

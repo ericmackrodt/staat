@@ -29,14 +29,14 @@ type WelcomeProps = StateProps & TrasformerProps & OwnProps;
 export default connect<OwnProps, StateProps, TrasformerProps>(
   state => {
     return {
-      name: state.welcome.name
+      name: state.welcome.name,
     };
   },
   () => {
     return {
-      setName: welcome.setName
+      setName: welcome.setName,
       // undo: welcome.undo.bind(welcomeState),
       // redo: welcomeState.redo.bind(welcomeState)
     };
-  }
+  },
 )(Welcome);

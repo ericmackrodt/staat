@@ -9,5 +9,5 @@ ReactDOM.render(
     <Welcome />
     <Calculator />
   </Provider>,
-  document.getElementById('entry')
+  document.getElementById('entry'),
 );
