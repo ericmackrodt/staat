@@ -10,4 +10,6 @@ cache:
 install:
   - yarn
 script:
+  - yarn boostrap
+  - yarn build
   - yarn coveralls

@@ -10,6 +10,7 @@
     "build:example": "cd packages/example && yarn build",
     "build": "yarn build:core && yarn build:time-travel && yarn build:react",
     "example": "yarn build && cd packages/example && yarn start",
+    "bootstrap": "lerna bootstrap",
     "test": "jest --coverage",
     "travis": "yarn test",
     "coveralls": "yarn test && cat ./tests/coverage/lcov.info | coveralls"
@@ -20,7 +21,7 @@
     "@types/jest": "^23.3.10",
     "coveralls": "^3.0.2",
     "jest": "^23.6.0",
-    "lerna": "^3.6.0",
+    "lerna": "^3.8.5",
     "ts-jest": "^23.10.5",
     "typescript": "^3.2.2"
   },
