@@ -1,0 +1,10 @@
+{
+  "extends": "./config/tsconfig.base",
+  "compilerOptions": {
+    "paths": {
+      "*": ["@types/*"],
+      "jest": ["./node_modules/@types/jest/index"]
+    },
+    "baseUrl": "."
+  }
+}

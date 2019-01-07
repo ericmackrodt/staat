@@ -17,8 +17,9 @@
     "resolveJsonModule": true,
     "declaration": true,
     "paths": {
-      "*": ["@types/*"],
+      "*": ["../../@types/*"],
       "jest": ["./node_modules/@types/jest/index"]
     }
-  }
+  },
+  "exclude": ["__tests__/**/*.*"]
 }

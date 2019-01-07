@@ -31,6 +31,7 @@ export class TimeTravelContainer<T> {
     const difference = diff(next, current);
     this.pastDiffs.push(difference);
     this.futureDiffs = [];
+    return next;
   }
 
   public undo(state: T): T {
