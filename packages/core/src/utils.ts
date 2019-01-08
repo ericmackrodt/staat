@@ -42,10 +42,9 @@ export function setProperty<TScope, TState extends Record<string, any>>(
 export function setScope<TScope, TState extends Record<string, any>>(
   state: TState,
   scope: TScope,
-  path: string,
+  path: string[],
 ): TState {
-  const parts = path.split('.');
-  return setProperty(state, parts, scope);
+  return setProperty(state, path, scope);
 }
 
 export function getProperty<TScope, TState extends Record<string, any>>(
@@ -61,8 +60,7 @@ export function getProperty<TScope, TState extends Record<string, any>>(
 
 export function getScope<TState extends Record<string, any>, TScope>(
   state: TState,
-  path: string,
+  path: string[],
 ): TScope {
-  const parts = path.split('.');
-  return getProperty(state, parts);
+  return getProperty(state, path);
 }

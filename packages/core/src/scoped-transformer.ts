@@ -1,24 +1,19 @@
-import { isPromise, getScope, setScope } from './utils';
+import { getScope, isPromise, setScope } from './utils';
+import { IScopedTransformer } from './types';
 
-export function scopedTransformer<
-  TState extends Record<keyof TState, unknown>,
-  TScope
->(scope: string) {
-  return function<TArgs extends any[]>(
-    definition: (
-      currentScope: TScope,
-      ...args: TArgs
-    ) => TScope | Promise<TScope>,
-  ) {
-    return function(currentState: TState, ...args: TArgs) {
-      const s = getScope<TState, TScope>(currentState, scope);
-      const result = definition(s, ...args);
-      if (isPromise(result)) {
-        return result.then(promiseResult =>
-          setScope({ ...currentState }, promiseResult, scope),
-        );
-      }
-      return setScope({ ...currentState }, result, scope);
+export function scopedTransformer<TState>(): IScopedTransformer<TState> {
+  return function scopedFn(scope: string[]) {
+    return function(definition: (currentScope: any, ...args: any) => unknown) {
+      return function(currentState: any, ...args: any) {
+        const s = getScope<TState, any>(currentState, scope);
+        const result = definition(s, ...args);
+        if (isPromise(result)) {
+          return result.then(promiseResult =>
+            setScope({ ...currentState }, promiseResult, scope),
+          );
+        }
+        return setScope({ ...currentState }, result, scope);
+      };
     };
   };
 }

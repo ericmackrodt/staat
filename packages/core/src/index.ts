@@ -1,10 +1,10 @@
 import staat from './staat';
 import { isPromise, getScope } from './utils';
 export {
+  Transformer,
   Transformers,
   Subscription,
   Staat,
-  IType,
   StateContainerType,
 } from './types';
 export * from './scoped-transformer';

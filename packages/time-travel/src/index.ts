@@ -9,14 +9,15 @@ function udpateHistory<TState>(
   currentState: TState,
   newState: TState,
   container: TimeTravelContainer<TState>,
-  scope?: string,
+  scope?: keyof TState,
 ): TState {
   if (scope) {
-    const newScope = internals.getScope<TState, any>(newState, scope);
-    const currentScope = internals.getScope<TState, TState>(
-      currentState,
-      scope,
-    );
+    const newScope = internals.getScope<TState, any>(newState, [
+      scope as string,
+    ]);
+    const currentScope = internals.getScope<TState, TState>(currentState, [
+      scope as string,
+    ]);
     container.setPresent(currentScope, newScope);
   } else {
     container.setPresent(currentState, newState);
@@ -28,7 +29,7 @@ function udpateHistory<TState>(
 function createTimeTravelTransformer<TState, TArgs extends any[]>(
   transformer: Transformer<TState, TArgs>,
   container: TimeTravelContainer<TState>,
-  scope?: string,
+  scope?: keyof TState,
 ) {
   return (currentState: TState, ...args: TArgs) => {
     const result = transformer(currentState, ...args);
@@ -59,7 +60,7 @@ export function timeTravelTransformers<
 >(
   transformers: TTransformers,
   container: TimeTravelContainer<TState>,
-  scope?: string,
+  scope?: keyof TState,
 ): TimeTravelTransformers<TState, TTransformers> {
   const newTransformers: TimeTravelTransformers<
     TState,
@@ -78,7 +79,7 @@ export function timeTravelTransformers<
     {} as Record<keyof TTransformers, Transformer<TState, any[]>>,
   ) as TimeTravelTransformers<TState, TTransformers>;
 
-  const scoped = scope ? scopedTransformer<TState, TState>(scope) : undefined;
+  const scoped = scope ? scopedTransformer<TState>()(scope) : undefined;
 
   newTransformers.undo = scoped
     ? scoped(createUndo(container))
@@ -95,7 +96,7 @@ export function timeTravel<
   TTransformers extends Record<keyof TTransformers, Transformer<any, any[]>>
 >(
   transformers: TTransformers,
-  scope?: string,
+  scope?: keyof TState,
 ): TimeTravelTransformers<TState, TTransformers> {
   const container = new TimeTravelContainer<TState>();
   return timeTravelTransformers(transformers, container, scope);
