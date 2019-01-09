@@ -1,7 +1,7 @@
 import { scopedTransformer } from 'staat';
 import { CalculatorState, AppState } from './types';
 
-const transformer = scopedTransformer<AppState, CalculatorState>('calculator');
+const transformer = scopedTransformer<AppState>()('calculator');
 
 export const initialState: CalculatorState = {
   count: 0,

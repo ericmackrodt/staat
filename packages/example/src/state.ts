@@ -1,5 +1,5 @@
 import staat from 'staat';
-import { timeTravel } from 'staat-timetravel';
+import timeTravel from 'staat-timetravel';
 import reactStaat from 'staat-react';
 import * as calculatorStateDefinition from './calculator-state-definition';
 import * as welcomeStateDefinition from './welcome-state-definition';
@@ -20,7 +20,7 @@ const initialState = {
 };
 
 const transformers = {
-  calculator: timeTravel(calcTransformers, 'calculator'),
+  calculator: timeTravel<AppState>()(calcTransformers, 'calculator'),
   welcome: welcomeTransformers,
 };
 

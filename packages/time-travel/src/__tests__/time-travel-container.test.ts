@@ -11,7 +11,7 @@ const state: TestState = {
 describe('TimeTravelContainer', () => {
   describe('setPresent', () => {
     it('sets canUndo and canRedo', () => {
-      const sut = new TimeTravelContainer<TestState>();
+      const sut = new TimeTravelContainer();
       const result = sut.setPresent(state, {
         count: 1,
       });
@@ -22,11 +22,11 @@ describe('TimeTravelContainer', () => {
   });
 
   describe('undo', () => {
-    let sut: TimeTravelContainer<TestState>;
+    let sut: TimeTravelContainer;
     let currentState: TestState;
 
     beforeEach(() => {
-      sut = new TimeTravelContainer<TestState>();
+      sut = new TimeTravelContainer();
       currentState = sut.setPresent(state, {
         count: 1,
       });
@@ -71,11 +71,11 @@ describe('TimeTravelContainer', () => {
   });
 
   describe('redo', () => {
-    let sut: TimeTravelContainer<TestState>;
+    let sut: TimeTravelContainer;
     let currentState: TestState;
 
     beforeEach(() => {
-      sut = new TimeTravelContainer<TestState>();
+      sut = new TimeTravelContainer();
       currentState = sut.setPresent(state, {
         count: 1,
       });

@@ -1,5 +1,4 @@
 export type Transformer<TState, TArgs extends any[]> = (
-  currentState: TState,
   ...args: TArgs
 ) => TState | Promise<TState>;
 
