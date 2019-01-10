@@ -11,6 +11,7 @@
   },
   "author": "Eric Mackrodt",
   "license": "ISC",
+  "repository": "https://github.com/ericmackrodt/staat",
   "dependencies": {
     "deep-freeze": "^0.0.1"
   },
