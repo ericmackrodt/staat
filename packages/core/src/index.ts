@@ -6,8 +6,9 @@ export {
   Subscription,
   Staat,
   StateContainerType,
+  IScope,
 } from './types';
-export * from './scoped-transformer';
+export * from './scope';
 export const internals = {
   isPromise,
   getScope,
