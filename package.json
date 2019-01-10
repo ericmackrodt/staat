@@ -21,6 +21,7 @@
   "repository": "https://github.com/ericmackrodt/staat",
   "devDependencies": {
     "@types/jest": "^23.3.10",
+    "@types/node": "^10.12.18",
     "coveralls": "^3.0.2",
     "jest": "^23.6.0",
     "lerna": "^3.8.5",
