@@ -35,7 +35,7 @@ export function setProperty<TScope, TState extends Record<string, any>>(
     result = { [key]: { ...current, ...value } };
   } else {
     result = {
-      [key]: { ...current, ...setProperty(current, path, index++, value) },
+      [key]: { ...current, ...setProperty(current, path, ++index, value) },
     };
   }
 
@@ -59,7 +59,7 @@ export function getProperty<TScope, TState extends Record<string, any>>(
   if (path.length - 1 <= index) {
     return state[key!];
   }
-  return getProperty(state[key!], path, index++);
+  return getProperty(state[key!], path, ++index);
 }
 
 export function getScope<TState extends Record<string, any>, TScope>(
