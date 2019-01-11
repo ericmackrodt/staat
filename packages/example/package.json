@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "staat": "1.1.1-beta.3",
-    "staat-timetravel": "1.1.1-beta.3",
-    "staat-react": "1.1.1-beta.3",
+    "staat": "1.1.1-beta.4",
+    "staat-timetravel": "1.1.1-beta.4",
+    "staat-react": "1.1.1-beta.4",
     "react": "^16.6.3",
     "react-dom": "^16.6.3"
   },
