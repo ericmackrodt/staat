@@ -1,13 +1,14 @@
 import staat from './staat';
 import { isPromise, getScope } from './utils';
 export {
+  Transformer,
   Transformers,
   Subscription,
   Staat,
-  IType,
   StateContainerType,
+  IScope,
 } from './types';
-export * from './scoped-transformer';
+export * from './scope';
 export const internals = {
   isPromise,
   getScope,

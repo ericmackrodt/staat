@@ -1,6 +1,6 @@
 import { applyChange, diff } from 'deep-diff';
 
-export class TimeTravelContainer<T> {
+export class TimeTravelContainer {
   private pastDiffs: deepDiff.IDiff[][];
   private futureDiffs: deepDiff.IDiff[][];
   constructor() {
@@ -26,7 +26,7 @@ export class TimeTravelContainer<T> {
     return !!this.futureDiffs.length;
   }
 
-  public setPresent(current: T, next: T) {
+  public setPresent<TState>(current: TState, next: TState): TState {
     next = JSON.parse(JSON.stringify(next));
     const difference = diff(next, current);
     this.pastDiffs.push(difference);
@@ -34,7 +34,7 @@ export class TimeTravelContainer<T> {
     return next;
   }
 
-  public undo(state: T): T {
+  public undo<TState>(state: TState): TState {
     if (!this.canUndo) {
       return state;
     }
@@ -48,7 +48,7 @@ export class TimeTravelContainer<T> {
     };
   }
 
-  public redo(state: T) {
+  public redo<TState>(state: TState): TState {
     if (!this.canRedo) {
       return state;
     }

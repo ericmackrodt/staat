@@ -1,14 +1,14 @@
-import { scopedTransformer } from 'staat';
+import { scope } from 'staat';
 import { CalculatorState, AppState } from './types';
 
-const transformer = scopedTransformer<AppState, CalculatorState>('calculator');
+export const calculatorScope = scope<AppState, 'calculator'>('calculator');
 
 export const initialState: CalculatorState = {
   count: 0,
 };
 
-export const add = transformer(
-  (currentState: CalculatorState, val: number): CalculatorState => {
+export const add = calculatorScope.transformer(
+  (currentState, val: number): CalculatorState => {
     return {
       ...currentState,
       count: currentState.count + val,
@@ -16,8 +16,8 @@ export const add = transformer(
   },
 );
 
-export const subtract = transformer(
-  (currentState: CalculatorState, val: number): CalculatorState => {
+export const subtract = calculatorScope.transformer(
+  (currentState, val: number): CalculatorState => {
     return {
       ...currentState,
       count: currentState.count - val,

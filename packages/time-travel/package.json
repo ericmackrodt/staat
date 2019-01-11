@@ -1,6 +1,6 @@
 {
   "name": "staat-timetravel",
-  "version": "1.0.0-beta.1",
+  "version": "1.1.1-beta.3",
   "description": "",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -11,6 +11,7 @@
   },
   "author": "Eric Mackrodt",
   "license": "ISC",
+  "repository": "https://github.com/ericmackrodt/staat",
   "dependencies": {
     "deep-diff": "^1.0.2"
   },
@@ -22,6 +23,6 @@
     "ts-loader": "5.3.2"
   },
   "peerDependencies": {
-    "staat": "1.1.1-beta.2"
+    "staat": "1.1.1-beta.3"
   }
 }

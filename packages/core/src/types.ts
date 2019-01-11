@@ -1,11 +1,13 @@
-export type IType<T> = new (...args: any[]) => T;
+export type Transformer<TState, TArgs extends any[]> = (
+  ...args: TArgs
+) => TState | Promise<TState>;
 
 export type Transformers<TTransformers extends {}> = {
   [TKey in keyof TTransformers]: TTransformers[TKey] extends (
     currentState: infer TState,
     ...args: infer TArgs
   ) => unknown
-    ? (...args: TArgs) => Promise<TState>
+    ? Transformer<TState, TArgs>
     : TTransformers[TKey]
 };
 
@@ -14,18 +16,10 @@ export type TransformersTree<TTransformers extends {}> = {
     currentState: infer TState,
     ...args: infer TArgs
   ) => unknown
-    ? (...args: TArgs) => Promise<TState>
+    ? Transformer<TState, TArgs>
     : TTransformers[TKey] extends {}
     ? TransformersTree<TTransformers[TKey]>
     : TTransformers[TKey]
-};
-
-export type TimeTravelTransformers<
-  TState,
-  TTransformers extends {}
-> = Transformers<TTransformers> & {
-  undo(): Promise<TState>;
-  redo(): Promise<TState>;
 };
 
 export type StateContainerType<TState> = {
@@ -39,11 +33,29 @@ export type Staat<TState, TTransformers> = StateContainerType<TState> &
 
 export type Subscription = () => Promise<void>;
 
-export type TransformerSignature<TState> = (
-  currentState: TState,
-  ...args: any[]
-) => TState;
+export type TransformerSignature<TState> = Transformer<TState, any[]>;
 
 export type TransformerOrObject<TState> =
   | TransformerSignature<TState>
   | Record<string, TransformerSignature<TState>>;
+
+/*tslint:disable callable-types*/
+export interface IScopedTransformerFactory<TState, TScope> {
+  <TArgs extends any[]>(
+    definition: (
+      currentScope: TScope,
+      ...args: TArgs
+    ) => TScope | Promise<TScope>,
+  ): (currentState: TState, ...args: TArgs) => TState | Promise<TState>;
+}
+
+export interface IScope<TState, TScope> {
+  path: string[];
+
+  transformer<TArgs extends any[]>(
+    definition: (
+      currentScope: TScope,
+      ...args: TArgs
+    ) => TScope | Promise<TScope>,
+  ): (currentState: TState, ...args: TArgs) => TState | Promise<TState>;
+}

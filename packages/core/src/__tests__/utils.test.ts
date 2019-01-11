@@ -9,7 +9,7 @@ describe('utils', () => {
         },
       };
 
-      const result = setScope(state, { name: 'Another' }, 'level1');
+      const result = setScope(state, { name: 'Another' }, ['level1']);
       expect(result).toEqual({
         level1: {
           name: 'Another',
@@ -27,7 +27,7 @@ describe('utils', () => {
         },
       };
 
-      const result = setScope(state, { name: 'Another' }, 'level1.level2');
+      const result = setScope(state, { name: 'Another' }, ['level1', 'level2']);
       expect(result).toEqual({
         level1: {
           level2: {

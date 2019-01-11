@@ -15,7 +15,7 @@ There are currently two libraries available.
 
 - `staat` is the main state management code.
 - `staat-react` is the library that connects staat to react.
-- `staat-timetravel` will be the library that adds time travel functionality to staat.
+- `staat-timetravel` adds time travel to a state.
 
 ## Concepts
 
@@ -36,7 +36,7 @@ There are currently two libraries available.
 import staat from 'staat';
 
 const initialState = {
-  count: 0
+  count: 0,
 };
 
 const state = staat(
@@ -46,9 +46,9 @@ const state = staat(
     },
     subtract(currentState: typeof initialState, value: number) {
       return { ...currentState, count: currentState.count - value };
-    }
+    },
   },
-  initialState
+  initialState,
 );
 
 async function execution() {
@@ -60,3 +60,9 @@ async function execution() {
 
 execution();
 ```
+
+## Documentation of apis:
+
+- **staat** - For more advanced usages of the core library, go to its [README](https://github.com/ericmackrodt/staat/tree/master/packages/core) file.
+- **staat-react** - For how to use the react library, go to its [README](https://github.com/ericmackrodt/staat/tree/master/packages/react) file.
+- **staat-timetravel** - For how to use the time travel library, go to its [README](https://github.com/ericmackrodt/staat/tree/master/packages/time-travel) file.
