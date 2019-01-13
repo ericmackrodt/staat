@@ -1,4 +1,3 @@
-import deepFreeze from 'deep-freeze';
 import { Subscription } from './types';
 
 export class StateContainer<T> {
@@ -6,7 +5,7 @@ export class StateContainer<T> {
   private subscriptions: Subscription[];
 
   constructor(initialState: T) {
-    this.state = deepFreeze(initialState);
+    this.state = initialState;
     this.subscriptions = [];
   }
 
@@ -18,7 +17,7 @@ export class StateContainer<T> {
   public setState(state: T) {
     return Promise.resolve().then(() => {
       const current: T = JSON.parse(JSON.stringify(state));
-      this.state = deepFreeze(current);
+      this.state = current;
       return this.fireSubscriptions().then(() => this.state);
     });
   }
