@@ -90,5 +90,5 @@
       "/**/build/**/*"
     ]
   },
-  "no-submodule-imports": [true]
+  "no-submodule-imports": [true, "jest-dom"]
 }
