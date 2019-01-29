@@ -1,6 +1,6 @@
 {
   "name": "staat-react",
-  "version": "1.1.1-beta.4",
+  "version": "1.1.1",
   "description": "",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -26,6 +26,6 @@
     "webpack-cli": "^3.1.2"
   },
   "peerDependencies": {
-    "staat": "1.1.1-beta.4"
+    "staat": "1.1.1"
   }
 }
