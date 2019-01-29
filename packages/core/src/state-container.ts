@@ -16,8 +16,7 @@ export class StateContainer<T> {
 
   public setState(state: T) {
     return Promise.resolve().then(() => {
-      const current: T = JSON.parse(JSON.stringify(state));
-      this.state = current;
+      this.state = state;
       return this.fireSubscriptions().then(() => this.state);
     });
   }

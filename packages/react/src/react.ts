@@ -3,9 +3,7 @@ import { ReactStaat } from './types';
 import makeConnect from './connect';
 import makeProvider from './provider';
 
-export * from 'staat';
-
-function reactStaat<TState, TTransformers>(
+export function reactStaat<TState, TTransformers>(
   staat: Staat<TState, TTransformers>,
 ): ReactStaat<TState> {
   return {
@@ -13,5 +11,3 @@ function reactStaat<TState, TTransformers>(
     connect: makeConnect<TState>(),
   };
 }
-
-export default reactStaat;
