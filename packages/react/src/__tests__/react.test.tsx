@@ -2,7 +2,7 @@ import React from 'react';
 import { reactStaat } from '../react';
 import staat from 'staat';
 import { ReactStaat } from '../types';
-import { render } from 'react-testing-library';
+import { render, fireEvent } from 'react-testing-library';
 /* tslint:disable no-submodule-imports */
 import 'jest-dom/extend-expect';
 
@@ -24,10 +24,21 @@ const transformers = {
 };
 
 type OwnProps = {};
-type TestComponentProps = TestState & OwnProps;
+type TransformerProps = {
+  add(value: number): TestState | Promise<TestState>;
+};
+type TestComponentProps = TestState & OwnProps & TransformerProps;
 
-const TestComponent: React.StatelessComponent<TestComponentProps> = ({ count }) => {
-  return <div>Count: {count}</div>
+const TestComponent: React.StatelessComponent<TestComponentProps> = ({
+  count,
+  add,
+}) => {
+  return (
+    <React.Fragment>
+      <div>Count: {count}</div>
+      <button onClick={() => add(10)}>Add</button>
+    </React.Fragment>
+  );
 };
 
 describe('React', () => {
@@ -38,24 +49,46 @@ describe('React', () => {
     const staatState = staat(transformers, state);
     sut = reactStaat(staatState);
 
-    ConnectedComponent = sut.connect<OwnProps, TestState>(({ count }) => {
-      return {
-        count,
-      };
-    })(TestComponent);
+    ConnectedComponent = sut.connect<OwnProps, TestState, TransformerProps>(
+      ({ count }) => {
+        return {
+          count,
+        };
+      },
+      () => ({
+        add: staatState.add,
+      }),
+    )(TestComponent);
+  });
 
   it('builds react-staat object', () => {
     expect(typeof sut.Provider).toBe('function');
     expect(typeof sut.connect).toBe('function');
   });
 
-  it('should update component', () => {
+  it('should render component', () => {
     const tree = (
       <sut.Provider>
         <ConnectedComponent />
       </sut.Provider>
     );
     const { getByText } = render(tree);
-    expect(getByText(/^Received:/).textContent).toBe('Received: Boba Fett');
+    expect(getByText(/^Count:/).textContent).toBe('Count: 0');
+  });
+
+  it('should update component', async () => {
+    const tree = (
+      <sut.Provider>
+        <ConnectedComponent />
+      </sut.Provider>
+    );
+    const { getByText, rerender } = render(tree);
+    await fireEvent.click(getByText('Add'));
+    await rerender(
+      <sut.Provider>
+        <ConnectedComponent />
+      </sut.Provider>,
+    );
+    expect(getByText(/^Count:/).textContent).toBe('Count: 10');
   });
 });
