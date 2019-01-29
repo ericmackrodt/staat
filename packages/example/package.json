@@ -13,8 +13,8 @@
     "staat": "1.1.1-beta.4",
     "staat-timetravel": "1.1.1-beta.4",
     "staat-react": "1.1.1-beta.4",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
   },
   "devDependencies": {
     "@types/react": "^16.7.17",
