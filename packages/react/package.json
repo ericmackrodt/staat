@@ -13,7 +13,6 @@
   "license": "ISC",
   "repository": "https://github.com/ericmackrodt/staat",
   "dependencies": {
-    "create-react-context": "^0.2.3",
     "react": "^16.7.0"
   },
   "devDependencies": {

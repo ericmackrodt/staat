@@ -12,12 +12,6 @@ config.externals = {
     amd: 'react',
     root: 'react'
   },
-  'create-react-context': {
-    commonjs: 'create-react-context',
-    commonjs2: 'create-react-context',
-    amd: 'create-react-context',
-    root: 'create-react-context'
-  },
   staat: {
     commonjs: 'staat',
     commonjs2: 'staat',
