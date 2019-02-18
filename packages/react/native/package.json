@@ -1,0 +1,6 @@
+{
+  "name": "staat-react/native",
+  "private": true,
+  "typings": "./build/index.d.ts",
+  "main": "./build/index.js"
+}
