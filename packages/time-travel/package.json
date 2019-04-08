@@ -1,6 +1,6 @@
 {
   "name": "staat-timetravel",
-  "version": "1.2.0-beta.1",
+  "version": "1.2.0",
   "description": "",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -23,6 +23,6 @@
     "ts-loader": "5.3.2"
   },
   "peerDependencies": {
-    "staat": "1.2.0-beta.1"
+    "staat": "1.2.0"
   }
 }
