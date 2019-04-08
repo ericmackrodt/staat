@@ -1,6 +1,6 @@
 {
   "name": "staat-react",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
@@ -12,19 +12,20 @@
   "author": "Eric Mackrodt",
   "license": "ISC",
   "repository": "https://github.com/ericmackrodt/staat",
-  "dependencies": {
-    "react": "^16.7.0"
-  },
   "devDependencies": {
     "@types/react": "^16.7.17",
+    "@babel/core": "7.3.3",
+    "babel-loader": "8.0.5",
     "cross-env": "^5.2.0",
     "jest-dom": "^3.0.0",
+    "metro-react-native-babel-preset": "0.51.1",
     "react-testing-library": "^5.4.4",
     "ts-loader": "5.3.2",
     "webpack": "^4.28.1",
     "webpack-cli": "^3.1.2"
   },
   "peerDependencies": {
-    "staat": "1.1.1"
+    "react": ">=16.5.0",
+    "staat": "1.2.0"
   }
 }

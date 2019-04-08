@@ -1,0 +1,10 @@
+{
+  "extends": "./../../config/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-native",
+    "target": "es2015",
+    "module": "es2015",
+    "baseUrl": ".",
+    "declarationDir": "./native/build",
+  }
+}
