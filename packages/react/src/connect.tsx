@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Consumer } from './context';
+import Context from './context';
 
 export default function makeConnect<TState>() {
   return function connect<TOwnProps, TStateProps, TTransformerProps>(
@@ -25,7 +25,7 @@ export default function makeConnect<TState>() {
 
         public render() {
           return (
-            <Consumer>
+            <Context.Consumer>
               {(state: TState) => (
                 <WrappedComponent
                   {...this.props}
@@ -33,7 +33,7 @@ export default function makeConnect<TState>() {
                   {...this.getTransformerProps()}
                 />
               )}
-            </Consumer>
+            </Context.Consumer>
           );
         }
       };

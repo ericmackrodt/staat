@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Staat } from 'staat';
-import { Provider } from './context';
+import Context from './context';
 
 export default function makeProvider<TState, TTransformers>(
   staat: Staat<TState, TTransformers>,
@@ -36,7 +36,11 @@ export default function makeProvider<TState, TTransformers>(
 
     public render() {
       const { children } = this.props;
-      return <Provider value={staat.currentState}>{children}</Provider>;
+      return (
+        <Context.Provider value={staat.currentState}>
+          {children}
+        </Context.Provider>
+      );
     }
   };
 }
