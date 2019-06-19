@@ -28,4 +28,6 @@ export const appState = staat(transformers, initialState);
 
 export const { calculator, welcome } = appState;
 
-export const { connect, Provider } = reactStaat(appState);
+export const { connect, Provider, useTransformers, useStaat } = reactStaat(
+  appState,
+);

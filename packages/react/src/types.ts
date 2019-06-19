@@ -1,4 +1,4 @@
-import { TransformersTree } from './../../core/src/types';
+import { TransformersTree } from 'staat';
 
 export type ProviderProps<T> = {
   states: T;

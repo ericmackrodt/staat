@@ -7,6 +7,7 @@ export {
   Staat,
   StateContainerType,
   IScope,
+  TransformersTree,
 } from './types';
 export * from './scope';
 export const internals = {
