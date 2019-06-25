@@ -35,20 +35,21 @@ export function makeUseStaat<TState, TTRansformers>(
       let didUnsubscribe = false;
 
       function stateChanged() {
-        if (didUnsubscribe) {
-          return Promise.resolve();
-        }
-
-        const newState = selector(staat.currentState);
-
-        setState((oldState: TSubset) => {
-          if (!shallowEqual(oldState, newState)) {
-            return newState;
+        setTimeout(() => {
+          if (didUnsubscribe) {
+            return;
           }
 
-          return oldState;
-        });
+          const newState = selector(staat.currentState);
 
+          setState((oldState: TSubset) => {
+            if (!shallowEqual(oldState, newState)) {
+              return newState;
+            }
+
+            return oldState;
+          });
+        });
         return Promise.resolve();
       }
 
