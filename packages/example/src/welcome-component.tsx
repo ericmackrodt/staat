@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { connect, welcome } from './state';
+import { connect, appState } from './state';
+import * as welcome from './welcome-state-definition';
 
 const Welcome: React.StatelessComponent<WelcomeProps> = props => {
   return (
@@ -17,7 +18,7 @@ type StateProps = {
 };
 
 type TrasformerProps = {
-  setName: typeof welcome.setName;
+  setName: (name: string) => void;
   // undo: typeof welcomeState.undo;
   // redo: typeof welcomeState.redo;
 };
@@ -34,7 +35,7 @@ export default connect<OwnProps, StateProps, TrasformerProps>(
   },
   () => {
     return {
-      setName: welcome.setName,
+      setName: (name: string) => appState.reduce(welcome.setName, name),
       // undo: welcome.undo.bind(welcomeState),
       // redo: welcomeState.redo.bind(welcomeState)
     };

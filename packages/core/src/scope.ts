@@ -8,9 +8,22 @@ class Scope<TState> implements IScope<TState, unknown> {
 
   constructor(private properties: string[]) {}
 
+  public reducer<TArgs extends any[]>(
+    definition: (currentScope: unknown, ...args: TArgs) => unknown,
+  ): (currentState: TState, ...args: TArgs) => TState {
+    return (currentState: any, ...args: any) => {
+      const s = getScope<TState, any>(currentState, this.properties);
+      const result = definition(s, ...args);
+      return setScope({ ...currentState }, result, this.properties);
+    };
+  }
+
   public transformer<TArgs extends any[]>(
     definition: (currentScope: unknown, ...args: TArgs) => unknown,
   ): (currentState: TState, ...args: TArgs) => TState | Promise<TState> {
+    console.warn(
+      '[Staat] Scope transformer has been discontinued, please use reducer instead',
+    );
     return (currentState: any, ...args: any) => {
       const s = getScope<TState, any>(currentState, this.properties);
       const result = definition(s, ...args);

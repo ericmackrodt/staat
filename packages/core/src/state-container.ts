@@ -15,10 +15,11 @@ export class StateContainer<T> {
   };
 
   public setState(state: T) {
-    return Promise.resolve().then(() => {
-      this.state = state;
-      return this.fireSubscriptions().then(() => this.state);
-    });
+    this.state = state;
+    Promise.resolve().then(() =>
+      this.fireSubscriptions().then(() => this.state),
+    );
+    return this.state;
   }
 
   public getState() {

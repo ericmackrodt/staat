@@ -29,6 +29,17 @@ function addTransformers<
   }, obj);
 }
 
+function makeReduce<TState>(container: StateContainer<TState>) {
+  return <TArgs extends any[]>(
+    reducer: (state: TState, ...args: TArgs) => TState,
+    ...args: TArgs
+  ) => {
+    const state = container.getState();
+    const result = reducer(state, ...args);
+    return container.setState(result) as TState;
+  };
+}
+
 function initializeObject<TState>(
   container: StateContainer<TState>,
 ): StateContainerType<TState> {
@@ -39,15 +50,21 @@ function initializeObject<TState>(
   });
   obj.subscribe = container.subscribe.bind(container);
   obj.unsubscribe = container.unsubscribe.bind(container);
+  obj.reduce = makeReduce(container);
   return obj as StateContainerType<TState>;
 }
 
 export default function staat<TState, TTransformers extends {}>(
-  transformers: TTransformers,
   initialState: TState,
+  transformers?: TTransformers,
 ): Staat<TState, TTransformers> {
   const container = new StateContainer(initialState);
   const obj = initializeObject(container);
-  addTransformers(obj, transformers, container);
+  if (transformers) {
+    console.warn(
+      '[Staat - Warning] Transformers will no longer be supported, use the reduce function instead',
+    );
+    addTransformers(obj, transformers, container);
+  }
   return obj as Staat<TState, TTransformers>;
 }

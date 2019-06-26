@@ -21,7 +21,7 @@ const transformers = {
 describe('staat', () => {
   let sut: Staat<TestState, typeof transformers>;
   beforeEach(() => {
-    sut = staat(transformers, state);
+    sut = staat(state, transformers);
   });
 
   it('sets up all members', () => {
@@ -34,7 +34,7 @@ describe('staat', () => {
   });
 
   it('sets up deep transformers', () => {
-    const sut2 = staat({ deep: transformers }, state);
+    const sut2 = staat(state, { deep: transformers });
     expect(sut2).toHaveProperty('deep');
     expect(typeof sut2.deep.add).toBe('function');
     expect(typeof sut2.deep.subtract).toBe('function');
@@ -70,15 +70,15 @@ describe('staat', () => {
   it('calls asynchronous transformers', async () => {
     const sut2 = staat(
       {
+        count: 2,
+      },
+      {
         multiply(currentState: TestState, value: number) {
           return Promise.resolve({
             ...currentState,
             count: currentState.count * value,
           });
         },
-      },
-      {
-        count: 2,
       },
     );
 
