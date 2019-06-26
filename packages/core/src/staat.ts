@@ -1,5 +1,10 @@
 import { StateContainer } from './state-container';
-import { StateContainerType, Staat, TransformerOrObject } from './types';
+import {
+  StateContainerType,
+  Staat,
+  TransformerOrObject,
+  LegacyStaat,
+} from './types';
 import { isPromise, isTransformer } from './utils';
 
 function addTransformers<
@@ -54,10 +59,15 @@ function initializeObject<TState>(
   return obj as StateContainerType<TState>;
 }
 
-export default function staat<TState, TTransformers extends {}>(
+function staat<TState>(initialState: TState): Staat<TState>;
+function staat<TState, TTransformers extends {}>(
   initialState: TState,
   transformers?: TTransformers,
-): Staat<TState, TTransformers> {
+): LegacyStaat<TState, TTransformers>;
+function staat<TState>(
+  initialState: TState,
+  transformers?: Record<string, any>,
+): Staat<TState> | LegacyStaat<TState, unknown> {
   const container = new StateContainer(initialState);
   const obj = initializeObject(container);
   if (transformers) {
@@ -66,5 +76,7 @@ export default function staat<TState, TTransformers extends {}>(
     );
     addTransformers(obj, transformers, container);
   }
-  return obj as Staat<TState, TTransformers>;
+  return obj;
 }
+
+export default staat;

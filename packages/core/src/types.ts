@@ -32,7 +32,9 @@ export type StateContainerType<TState> = {
   unsubscribe(fn: Subscription): void;
 };
 
-export type Staat<TState, TTransformers> = StateContainerType<TState> &
+export type Staat<TState> = StateContainerType<TState>;
+
+export type LegacyStaat<TState, TTransformers> = StateContainerType<TState> &
   TransformersTree<TTransformers>;
 
 export type Subscription = () => Promise<void>;
