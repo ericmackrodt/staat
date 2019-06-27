@@ -60,14 +60,14 @@ function initializeObject<TState>(
 }
 
 function staat<TState>(initialState: TState): Staat<TState>;
-function staat<TState, TTransformers extends {}>(
+function staat<TTransformers, TState>(
+  transformers: TTransformers,
   initialState: TState,
-  transformers?: TTransformers,
-): LegacyStaat<TState, TTransformers>;
-function staat<TState>(
-  initialState: TState,
-  transformers?: Record<string, any>,
-): Staat<TState> | LegacyStaat<TState, unknown> {
+): LegacyStaat<TTransformers, TState>;
+function staat<TState>(...args: Array<TState | Record<string, any>>): unknown {
+  const initialState: TState = (args[1] || args[0]) as TState;
+  const transformers = args[1] ? (args[0] as Record<string, any>) : undefined;
+
   const container = new StateContainer(initialState);
   const obj = initializeObject(container);
   if (transformers) {

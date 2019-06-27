@@ -34,7 +34,7 @@ export type StateContainerType<TState> = {
 
 export type Staat<TState> = StateContainerType<TState>;
 
-export type LegacyStaat<TState, TTransformers> = StateContainerType<TState> &
+export type LegacyStaat<TTransformers, TState> = StateContainerType<TState> &
   TransformersTree<TTransformers>;
 
 export type Subscription = () => Promise<void>;
