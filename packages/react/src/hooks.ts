@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Staat, TransformersTree } from 'staat';
+import { Staat } from 'staat';
+import { Reducers } from './types';
 
 function shallowEqual<T extends {}>(left: T, right: T) {
   const leftKeys = Object.keys(left || {});
@@ -23,9 +24,7 @@ function shallowEqual<T extends {}>(left: T, right: T) {
   );
 }
 
-export function makeUseStaat<TState, TTRansformers>(
-  staat: Staat<TState, TTRansformers>,
-) {
+export function makeUseStaat<TState>(staat: Staat<TState>) {
   return function<TSubset>(selector: (state: TState) => TSubset): TSubset {
     const [currentState, setState] = useState<TSubset>(
       selector(staat.currentState),
@@ -65,19 +64,24 @@ export function makeUseStaat<TState, TTRansformers>(
   };
 }
 
-export function makeUseTransformers<TState, TTransformers>(
-  staat: Staat<TState, TTransformers>,
-): () => TransformersTree<TTransformers> {
-  const transformers = Object.keys(staat).reduce(
-    (acc, key) => {
-      if (!['currentState', 'subscribe', 'unsubscribe'].includes(key)) {
-        acc[key] = (staat as Record<string, unknown>)[key];
-      }
-      return acc;
-    },
-    {} as Record<string, unknown>,
-  ) as TransformersTree<TTransformers>;
-  return function() {
-    return transformers;
+export function makeUseReducers<TState>(
+  staat: Staat<TState>,
+): <
+  TReducers extends Record<string, (state: TState, ...args: any[]) => TState>
+>(
+  reducers: TReducers,
+) => Reducers<TState, TReducers> {
+  return function(reducers) {
+    const result = Object.keys(reducers).reduce(
+      (acc, key) => {
+        acc[key] = (...args: any[]) => {
+          const reducer = reducers[key];
+          return staat.reduce(reducer, ...args);
+        };
+        return acc;
+      },
+      {} as Record<string, unknown>,
+    );
+    return result as Reducers<TState, any>;
   };
 }

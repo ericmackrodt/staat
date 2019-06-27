@@ -5,6 +5,7 @@ export {
   Transformers,
   Subscription,
   Staat,
+  LegacyStaat,
   StateContainerType,
   IScope,
   TransformersTree,

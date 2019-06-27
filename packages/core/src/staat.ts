@@ -1,5 +1,10 @@
 import { StateContainer } from './state-container';
-import { StateContainerType, Staat, TransformerOrObject } from './types';
+import {
+  StateContainerType,
+  Staat,
+  TransformerOrObject,
+  LegacyStaat,
+} from './types';
 import { isPromise, isTransformer } from './utils';
 
 function addTransformers<
@@ -29,6 +34,17 @@ function addTransformers<
   }, obj);
 }
 
+function makeReduce<TState>(container: StateContainer<TState>) {
+  return <TArgs extends any[]>(
+    reducer: (state: TState, ...args: TArgs) => TState,
+    ...args: TArgs
+  ) => {
+    const state = container.getState();
+    const result = reducer(state, ...args);
+    return container.setState(result) as TState;
+  };
+}
+
 function initializeObject<TState>(
   container: StateContainer<TState>,
 ): StateContainerType<TState> {
@@ -39,15 +55,28 @@ function initializeObject<TState>(
   });
   obj.subscribe = container.subscribe.bind(container);
   obj.unsubscribe = container.unsubscribe.bind(container);
+  obj.reduce = makeReduce(container);
   return obj as StateContainerType<TState>;
 }
 
-export default function staat<TState, TTransformers extends {}>(
+function staat<TState>(initialState: TState): Staat<TState>;
+function staat<TTransformers, TState>(
   transformers: TTransformers,
   initialState: TState,
-): Staat<TState, TTransformers> {
+): LegacyStaat<TTransformers, TState>;
+function staat<TState>(...args: Array<TState | Record<string, any>>): unknown {
+  const initialState: TState = (args[1] || args[0]) as TState;
+  const transformers = args[1] ? (args[0] as Record<string, any>) : undefined;
+
   const container = new StateContainer(initialState);
   const obj = initializeObject(container);
-  addTransformers(obj, transformers, container);
-  return obj as Staat<TState, TTransformers>;
+  if (transformers) {
+    console.warn(
+      '[Staat - Warning] Transformers will no longer be supported, use the reduce function instead',
+    );
+    addTransformers(obj, transformers, container);
+  }
+  return obj;
 }
+
+export default staat;

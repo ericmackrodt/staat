@@ -24,11 +24,17 @@ export type TransformersTree<TTransformers extends {}> = {
 
 export type StateContainerType<TState> = {
   currentState: TState;
+  reduce<TArgs extends any[]>(
+    reducer: (state: TState, ...args: TArgs) => TState,
+    ...args: TArgs
+  ): TState;
   subscribe(fn: Subscription): void;
   unsubscribe(fn: Subscription): void;
 };
 
-export type Staat<TState, TTransformers> = StateContainerType<TState> &
+export type Staat<TState> = StateContainerType<TState>;
+
+export type LegacyStaat<TTransformers, TState> = StateContainerType<TState> &
   TransformersTree<TTransformers>;
 
 export type Subscription = () => Promise<void>;
@@ -52,6 +58,13 @@ export interface IScopedTransformerFactory<TState, TScope> {
 export interface IScope<TState, TScope> {
   path: string[];
 
+  reducer<TArgs extends any[]>(
+    definition: (currentScope: TScope, ...args: TArgs) => TScope,
+  ): (currentState: TState, ...args: TArgs) => TState;
+
+  /**
+   * Deprecated
+   */
   transformer<TArgs extends any[]>(
     definition: (
       currentScope: TScope,

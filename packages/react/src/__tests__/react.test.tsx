@@ -42,7 +42,7 @@ const TestComponent: React.StatelessComponent<TestComponentProps> = ({
 };
 
 describe('React', () => {
-  let sut: ReactStaat<TestState, typeof transformers>;
+  let sut: ReactStaat<TestState>;
   let ConnectedComponent: React.ComponentType<OwnProps>;
 
   beforeEach(() => {

@@ -16,7 +16,8 @@ export class StateContainer<T> {
 
   public setState(state: T) {
     this.state = state;
-    return this.fireSubscriptions();
+    this.fireSubscriptions();
+    return this.state;
   }
 
   public getState() {
