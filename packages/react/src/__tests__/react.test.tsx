@@ -46,7 +46,7 @@ describe('React', () => {
   let ConnectedComponent: React.ComponentType<OwnProps>;
 
   beforeEach(() => {
-    const staatState = staat(state, transformers);
+    const staatState = staat(transformers, state);
     sut = reactStaat(staatState);
 
     ConnectedComponent = sut.connect<OwnProps, TestState, TransformerProps>(
