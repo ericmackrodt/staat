@@ -26,11 +26,10 @@ const subtract = calculatorScope.reducer(
   },
 );
 
-const t = timeTravel(
+export default timeTravel(
   {
     add,
     subtract,
   },
   calculatorScope,
 );
-export default t;

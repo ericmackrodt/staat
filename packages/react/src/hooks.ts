@@ -6,6 +6,10 @@ function shallowEqual<T extends {}>(left: T, right: T) {
   const leftKeys = Object.keys(left || {});
   const rightKeys = Object.keys(right || {});
 
+  if (typeof left !== 'object') {
+    return left === right;
+  }
+
   if (left === right) {
     return true;
   }
