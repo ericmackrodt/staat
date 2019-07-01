@@ -10,4 +10,6 @@ const initialState = {
 
 export const appState = staat(initialState);
 
-export const { connect, Provider } = reactStaat(appState);
+export const { connect, Provider, useReducers, useStaat } = reactStaat(
+  appState,
+);
