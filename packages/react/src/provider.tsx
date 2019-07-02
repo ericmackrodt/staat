@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import { Staat } from 'staat';
+import { Provider } from './context';
 
-export default function makeProvider<TState>(
-  staat: Staat<TState>,
-  { Provider }: React.Context<TState>,
+export default function makeProvider<TState, TTransformers>(
+  staat: Staat<TState, TTransformers>,
 ): React.ComponentType {
   return class StaatProvider extends React.Component {
     private _mounted: boolean;

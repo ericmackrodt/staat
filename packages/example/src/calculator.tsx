@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { connect, appState } from './state';
-import calc from './calculator-state-definition';
+import { calculator as calculatorTransformers, connect } from './state';
 
 const Calculator: React.StatelessComponent<CalculatorProps> = props => {
   return (
@@ -19,18 +18,18 @@ type StateProps = {
   count: number;
 };
 
-type ReducerProps = {
-  add: (val: number) => void;
-  subtract: (val: number) => void;
-  undo: () => void;
-  redo: () => void;
+type TransformerProps = {
+  add: typeof calculatorTransformers.add;
+  subtract: typeof calculatorTransformers.subtract;
+  undo: typeof calculatorTransformers.undo;
+  redo: typeof calculatorTransformers.redo;
 };
 
 type OwnProps = {};
 
-type CalculatorProps = ReducerProps & StateProps & OwnProps;
+type CalculatorProps = TransformerProps & StateProps & OwnProps;
 
-export default connect<OwnProps, StateProps, ReducerProps>(
+export default connect<OwnProps, StateProps, TransformerProps>(
   ({ calculator }) => {
     return {
       count: calculator.count,
@@ -38,10 +37,10 @@ export default connect<OwnProps, StateProps, ReducerProps>(
   },
   () => {
     return {
-      add: (val: number) => appState.reduce(calc.add, val),
-      subtract: (val: number) => appState.reduce(calc.subtract, val),
-      undo: () => appState.reduce(calc.undo),
-      redo: () => appState.reduce(calc.redo),
+      add: calculatorTransformers.add,
+      subtract: calculatorTransformers.subtract,
+      undo: calculatorTransformers.undo,
+      redo: calculatorTransformers.redo,
     };
   },
 )(Calculator);

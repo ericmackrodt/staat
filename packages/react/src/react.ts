@@ -1,22 +1,13 @@
-import React from 'react';
-import { Staat, LegacyStaat } from 'staat';
-import makeConnect from './connect';
-import { makeUseStaat, makeUseReducers } from './hooks';
-import makeProvider from './provider';
+import { Staat } from 'staat';
 import { ReactStaat } from './types';
+import makeConnect from './connect';
+import makeProvider from './provider';
 
-export function reactStaat<TTransformers, TState>(
-  staat: LegacyStaat<TTransformers, TState>,
-): ReactStaat<TState>;
-export function reactStaat<TState>(staat: Staat<TState>): ReactStaat<TState>;
-export function reactStaat<TState>(
-  staat: Staat<TState> | LegacyStaat<unknown, TState>,
+export function reactStaat<TState, TTransformers>(
+  staat: Staat<TState, TTransformers>,
 ): ReactStaat<TState> {
-  const context = React.createContext<any>(null);
   return {
-    Provider: makeProvider(staat, context),
-    connect: makeConnect<TState>(context),
-    useStaat: makeUseStaat<TState>(staat),
-    useReducers: makeUseReducers<TState>(staat),
+    Provider: makeProvider(staat),
+    connect: makeConnect<TState>(),
   };
 }

@@ -59,7 +59,7 @@ describe('scope', () => {
     expect(sut2.path).toEqual(['another1', 'another2']);
   });
 
-  describe('transformer', () => {
+  describe('transfomer', () => {
     it('is called with scope', () => {
       const sut = scope<State, 'level1'>('level1');
       const stub = jest.fn();
@@ -158,66 +158,6 @@ describe('scope', () => {
           count2: 0,
         },
       },
-    });
-  });
-
-  describe('reducer', () => {
-    it('is called with scope', () => {
-      const sut = scope<State, 'level1'>('level1');
-      const stub = jest.fn();
-      const reducer = sut.reducer(stub);
-      reducer(initialState);
-      expect(stub).toHaveBeenCalledWith(initialState.level1);
-    });
-
-    it('is called with deeper scope', () => {
-      const sut = scope<State, 'level1', 'level2'>('level1', 'level2');
-      const stub = jest.fn();
-      const reducer = sut.reducer(stub);
-      reducer(initialState);
-      expect(stub).toHaveBeenCalledWith(initialState.level1.level2);
-    });
-
-    it('updates scope', () => {
-      const sut = scope<State, 'level1'>('level1');
-      const reducer = sut.reducer((currentScope, value: string) => {
-        return { ...currentScope, value1: value };
-      });
-      expect(reducer(initialState, 'new_value')).toEqual({
-        level1: {
-          value1: 'new_value',
-          level2: {
-            value2: '',
-          },
-        },
-        another1: {
-          count1: 0,
-          another2: {
-            count2: 0,
-          },
-        },
-      });
-    });
-
-    it('updates deeper scope', () => {
-      const sut = scope<State, 'level1', 'level2'>('level1', 'level2');
-      const reducer = sut.reducer((currentScope, value2: string) => {
-        return { ...currentScope, value2 };
-      });
-      expect(reducer(initialState, 'new_value')).toEqual({
-        level1: {
-          value1: '',
-          level2: {
-            value2: 'new_value',
-          },
-        },
-        another1: {
-          count1: 0,
-          another2: {
-            count2: 0,
-          },
-        },
-      });
     });
   });
 });

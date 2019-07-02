@@ -5,10 +5,8 @@ export {
   Transformers,
   Subscription,
   Staat,
-  LegacyStaat,
   StateContainerType,
   IScope,
-  TransformersTree,
 } from './types';
 export * from './scope';
 export const internals = {

@@ -1,14 +1,13 @@
 import { scope } from 'staat';
 import { CalculatorState, AppState } from './types';
-import timeTravel from 'staat-timetravel';
 
-const calculatorScope = scope<AppState, 'calculator'>('calculator');
+export const calculatorScope = scope<AppState, 'calculator'>('calculator');
 
 export const initialState: CalculatorState = {
   count: 0,
 };
 
-const add = calculatorScope.reducer(
+export const add = calculatorScope.transformer(
   (currentState, val: number): CalculatorState => {
     return {
       ...currentState,
@@ -17,19 +16,11 @@ const add = calculatorScope.reducer(
   },
 );
 
-const subtract = calculatorScope.reducer(
+export const subtract = calculatorScope.transformer(
   (currentState, val: number): CalculatorState => {
     return {
       ...currentState,
       count: currentState.count - val,
     };
   },
-);
-
-export default timeTravel(
-  {
-    add,
-    subtract,
-  },
-  calculatorScope,
 );

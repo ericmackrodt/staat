@@ -68,25 +68,3 @@ export function getScope<TState extends Record<string, any>, TScope>(
 ): TScope {
   return getProperty(state, path, 0);
 }
-
-// https://stackoverflow.com/questions/10344498/best-way-to-iterate-over-an-array-without-blocking-the-ui/10344560#10344560
-export function processLargeArrayAsync<T>(
-  array: T[],
-  fn: (c: T) => void,
-  chunk = 100,
-) {
-  chunk = chunk || 100;
-  let index = 0;
-  const doChunk = () => {
-    let cnt = chunk;
-    while (cnt-- && index < array.length) {
-      fn(array[index]);
-      ++index;
-    }
-    if (index < array.length) {
-      // set Timeout for async iteration
-      setTimeout(doChunk, 1);
-    }
-  };
-  doChunk();
-}
