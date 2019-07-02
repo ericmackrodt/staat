@@ -4,6 +4,7 @@ import {
   Staat,
   TransformerOrObject,
   LegacyStaat,
+  RequesterState,
 } from './types';
 import { isPromise, isTransformer } from './utils';
 
@@ -45,17 +46,39 @@ function makeReduce<TState>(container: StateContainer<TState>) {
   };
 }
 
+function makeSelect<TState>(
+  container: StateContainer<TState>,
+): <TSubset>(selector: (state: TState) => TSubset) => TSubset {
+  return selector => {
+    const state = container.getState();
+    return selector(state);
+  };
+}
+
+function makeRequester<TState>(container: StateContainer<TState>) {
+  return <TArgs extends any[]>(
+    requester: (state: RequesterState<TState>, ...args: TArgs) => Promise<void>,
+    ...args: TArgs
+  ): Promise<void> => {
+    const reduce = makeReduce<TState>(container);
+    const select = makeSelect<TState>(container);
+    return requester({ reduce, select }, ...args);
+  };
+}
+
 function initializeObject<TState>(
   container: StateContainer<TState>,
 ): StateContainerType<TState> {
-  const obj: Partial<StateContainerType<TState>> = {};
+  const obj: Partial<StateContainerType<TState>> = {
+    subscribe: container.subscribe.bind(container),
+    unsubscribe: container.unsubscribe.bind(container),
+    reduce: makeReduce(container),
+    request: makeRequester(container),
+  };
 
   Object.defineProperty(obj, 'currentState', {
     get: () => container.getState(),
   });
-  obj.subscribe = container.subscribe.bind(container);
-  obj.unsubscribe = container.unsubscribe.bind(container);
-  obj.reduce = makeReduce(container);
   return obj as StateContainerType<TState>;
 }
 

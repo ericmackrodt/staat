@@ -22,12 +22,24 @@ export type TransformersTree<TTransformers extends {}> = {
     : TTransformers[TKey]
 };
 
+export type RequesterState<TState> = {
+  select<TSubset>(selector: (state: TState) => TSubset): TSubset;
+  reduce<TArgs extends any[]>(
+    reducer: (state: TState, ...args: TArgs) => TState,
+    ...args: TArgs
+  ): TState;
+};
+
 export type StateContainerType<TState> = {
   currentState: TState;
   reduce<TArgs extends any[]>(
     reducer: (state: TState, ...args: TArgs) => TState,
     ...args: TArgs
   ): TState;
+  request<TArgs extends any[]>(
+    requester: (state: RequesterState<TState>, ...args: TArgs) => Promise<void>,
+    ...args: TArgs
+  ): Promise<void>;
   subscribe(fn: Subscription): void;
   unsubscribe(fn: Subscription): void;
 };
