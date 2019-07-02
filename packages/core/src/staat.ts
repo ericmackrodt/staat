@@ -5,6 +5,7 @@ import {
   TransformerOrObject,
   LegacyStaat,
   RequesterState,
+  Select,
 } from './types';
 import { isPromise, isTransformer } from './utils';
 
@@ -46,11 +47,12 @@ function makeReduce<TState>(container: StateContainer<TState>) {
   };
 }
 
-function makeSelect<TState>(
-  container: StateContainer<TState>,
-): <TSubset>(selector: (state: TState) => TSubset) => TSubset {
-  return selector => {
+function makeSelect<TState>(container: StateContainer<TState>): Select<TState> {
+  return <TSubset>(selector?: (state: TState) => TSubset | TState) => {
     const state = container.getState();
+    if (!selector) {
+      return state;
+    }
     return selector(state);
   };
 }
@@ -73,11 +75,17 @@ function initializeObject<TState>(
     subscribe: container.subscribe.bind(container),
     unsubscribe: container.unsubscribe.bind(container),
     reduce: makeReduce(container),
+    select: makeSelect(container),
     request: makeRequester(container),
   };
 
   Object.defineProperty(obj, 'currentState', {
-    get: () => container.getState(),
+    get: () => {
+      console.warn(
+        '[Staat - Warning] currentState will no longer be supported, use the select function instead',
+      );
+      return container.getState();
+    },
   });
   return obj as StateContainerType<TState>;
 }

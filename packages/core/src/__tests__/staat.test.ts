@@ -3,6 +3,7 @@ import { Staat, LegacyStaat } from '../types';
 
 type TestState = {
   count: number;
+  name?: string;
 };
 
 const state: TestState = {
@@ -139,6 +140,24 @@ describe('staat', () => {
       sut.reduce(s => ({ ...s, count: 2 }));
       await new Promise(resolve => setTimeout(resolve, 1));
       expect(subscription).toHaveBeenCalledTimes(1);
+    });
+
+    describe('select', () => {
+      it('gets the whole state if no parameter is passed', () => {
+        expect(sut.select()).toBe(state);
+      });
+
+      it('gets single value', () => {
+        sut.reduce(s => ({ ...s, count: 77 }));
+        expect(sut.select(s => s.count)).toBe(77);
+      });
+
+      it('gets different object with value', () => {
+        sut.reduce(s => ({ ...s, count: 77, name: 'test' }));
+        expect(sut.select(s => ({ result: s.name }))).toEqual({
+          result: 'test',
+        });
+      });
     });
   });
 });

@@ -30,8 +30,14 @@ export type RequesterState<TState> = {
   ): TState;
 };
 
+export interface Select<TState> {
+  (): TState;
+  <TSubset>(selector: (state: TState) => TSubset): TSubset;
+}
+
 export type StateContainerType<TState> = {
   currentState: TState;
+  select: Select<TState>;
   reduce<TArgs extends any[]>(
     reducer: (state: TState, ...args: TArgs) => TState,
     ...args: TArgs
