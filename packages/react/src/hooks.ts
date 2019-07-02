@@ -43,7 +43,7 @@ export function makeUseStaat<TState>(staat: Staat<TState>) {
             return;
           }
 
-          const newState = selector(staat.currentState);
+          const newState = staat.select(selector);
 
           setState((oldState: TSubset) => {
             if (!shallowEqual(oldState, newState)) {
