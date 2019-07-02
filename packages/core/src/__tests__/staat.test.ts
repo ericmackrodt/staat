@@ -102,6 +102,7 @@ describe('staat', () => {
       expect(typeof sut.subscribe).toBe('function');
       expect(typeof sut.unsubscribe).toBe('function');
       expect(typeof sut.reduce).toBe('function');
+      expect(typeof sut.request).toBe('function');
     });
 
     it('reduces the value', () => {
