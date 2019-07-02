@@ -9,6 +9,7 @@ export {
   StateContainerType,
   IScope,
   TransformersTree,
+  RequesterState,
 } from './types';
 export * from './scope';
 export const internals = {
