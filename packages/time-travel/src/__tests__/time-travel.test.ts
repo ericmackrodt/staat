@@ -18,8 +18,20 @@ const baseState: State = {
   scope: { scopeArgument: '0' },
 };
 
-function reducer(state: State, argument1: string, argument2: number): State {
+function transformer(
+  state: State,
+  argument1: string,
+  argument2: number,
+): State {
   return { ...state, argument1, argument2 };
+}
+
+function transformerPromised(
+  state: State,
+  argument1: string,
+  argument2: number,
+): Promise<State> {
+  return Promise.resolve({ ...state, argument1, argument2 });
 }
 
 describe('timeTravel', () => {
@@ -35,49 +47,63 @@ describe('timeTravel', () => {
     TimeTravelContainer.prototype.redo = redoStub;
   });
 
-  it('retains reducer functionality', () => {
-    const sut = timeTravel({ reducer });
-    expect(reducer(baseState, 'a', 1)).not.toBe(sut.reducer(baseState, 'a', 1));
-    expect(sut.reducer(baseState, 'a', 1)).toEqual(reducer(baseState, 'a', 1));
+  it('retains transformer functionality', () => {
+    const sut = timeTravel({ transformer });
+    expect(transformer(baseState, 'a', 1)).not.toBe(
+      sut.transformer(baseState, 'a', 1),
+    );
+    expect(sut.transformer(baseState, 'a', 1)).toEqual(
+      transformer(baseState, 'a', 1),
+    );
+  });
+
+  it('retains transformer functionality with promise', async () => {
+    const sut = timeTravel({ transformerPromised });
+    expect(await sut.transformerPromised(baseState, 'a', 1)).not.toBe(
+      await transformerPromised(baseState, 'a', 1),
+    );
+    expect(await sut.transformerPromised(baseState, 'a', 1)).toEqual(
+      await transformerPromised(baseState, 'a', 1),
+    );
   });
 
   it('builds object with time travel functions', () => {
-    const sut = timeTravel({ reducer });
+    const sut = timeTravel({ transformer });
     expect(sut).toHaveProperty('undo');
     expect(sut).toHaveProperty('redo');
   });
 
-  it('sets up scoped reducers', () => {
+  it('sets up scoped transformers', () => {
     const testScope = scope<State, 'scope'>('scope');
-    const scopedReducer = testScope.reducer(
+    const scopedTransformer = testScope.transformer(
       (currentScope, scopeArgument: string) => {
         return { ...currentScope, scopeArgument };
       },
     );
-    const sut = timeTravel({ scopedReducer }, testScope);
-    expect(sut.scopedReducer(baseState, 'scoped_value')).not.toBe(
-      scopedReducer(baseState, 'scoped_value'),
+    const sut = timeTravel({ scopedTransformer }, testScope);
+    expect(sut.scopedTransformer(baseState, 'scoped_value')).not.toBe(
+      scopedTransformer(baseState, 'scoped_value'),
     );
-    expect(sut.scopedReducer(baseState, 'scoped_value')).toEqual(
-      scopedReducer(baseState, 'scoped_value'),
+    expect(sut.scopedTransformer(baseState, 'scoped_value')).toEqual(
+      scopedTransformer(baseState, 'scoped_value'),
     );
   });
 
-  it('calls setPresent when calling reducer', () => {
-    const sut = timeTravel({ reducer });
-    sut.reducer(baseState, 'a', 1);
+  it('calls setPresent when calling transformer', () => {
+    const sut = timeTravel({ transformer });
+    sut.transformer(baseState, 'a', 1);
     expect(setPresentStub).toHaveBeenCalledTimes(1);
   });
 
-  it('calls scoped setPresent when calling reducer', () => {
+  it('calls scoped setPresent when calling transformer', () => {
     const testScope = scope<State, 'scope'>('scope');
-    const scopedReducer = testScope.reducer(
+    const scopedTransformer = testScope.transformer(
       (currentScope, scopeArgument: string) => {
         return { ...currentScope, scopeArgument };
       },
     );
-    const sut = timeTravel({ scopedReducer }, testScope);
-    sut.scopedReducer(baseState, 'scoped_value');
+    const sut = timeTravel({ scopedTransformer }, testScope);
+    sut.scopedTransformer(baseState, 'scoped_value');
     expect(setPresentStub).toHaveBeenCalledTimes(1);
     expect(setPresentStub).toHaveBeenCalledWith(
       { scopeArgument: '0' },
@@ -86,8 +112,8 @@ describe('timeTravel', () => {
   });
 
   it('calls undo', () => {
-    const sut = timeTravel({ reducer });
-    const newState = sut.reducer(baseState, 'new_value', 10) as State;
+    const sut = timeTravel({ transformer });
+    const newState = sut.transformer(baseState, 'new_value', 10) as State;
     sut.undo(newState);
     expect(undoStub).toHaveBeenCalledTimes(1);
     expect(undoStub).toHaveBeenCalledWith({
@@ -100,21 +126,21 @@ describe('timeTravel', () => {
 
   it('calls scoped undo', () => {
     const testScope = scope<State, 'scope'>('scope');
-    const scopedReducer = testScope.reducer(
+    const scopedTransformer = testScope.transformer(
       (currentScope, scopeArgument: string) => {
         return { ...currentScope, scopeArgument };
       },
     );
-    const sut = timeTravel({ scopedReducer }, testScope);
-    const newState = sut.scopedReducer(baseState, 'scoped_value') as State;
+    const sut = timeTravel({ scopedTransformer }, testScope);
+    const newState = sut.scopedTransformer(baseState, 'scoped_value') as State;
     sut.undo(newState);
     expect(undoStub).toHaveBeenCalledTimes(1);
     expect(undoStub).toHaveBeenCalledWith({ scopeArgument: 'scoped_value' });
   });
 
   it('calls redo', () => {
-    const sut = timeTravel({ reducer });
-    let newState = sut.reducer(baseState, 'new_value', 10) as State;
+    const sut = timeTravel({ transformer });
+    let newState = sut.transformer(baseState, 'new_value', 10) as State;
     newState = sut.undo(newState) as State;
     sut.redo(newState);
     expect(redoStub).toHaveBeenCalledTimes(1);
@@ -128,13 +154,13 @@ describe('timeTravel', () => {
 
   it('calls scoped redo', () => {
     const testScope = scope<State, 'scope'>('scope');
-    const scopedReducer = testScope.reducer(
+    const scopedTransformer = testScope.transformer(
       (currentScope, scopeArgument: string) => {
         return { ...currentScope, scopeArgument };
       },
     );
-    const sut = timeTravel({ scopedReducer }, testScope);
-    let newState = sut.scopedReducer(baseState, 'scoped_value') as State;
+    const sut = timeTravel({ scopedTransformer }, testScope);
+    let newState = sut.scopedTransformer(baseState, 'scoped_value') as State;
     newState = sut.undo(newState) as State;
     sut.redo(newState);
     expect(redoStub).toHaveBeenCalledTimes(1);

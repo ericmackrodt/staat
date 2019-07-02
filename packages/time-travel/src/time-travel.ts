@@ -1,9 +1,9 @@
 import { internals, IScope } from 'staat';
 import { TimeTravelContainer } from './time-travel-container';
-import { StaatTimeTravel } from './types';
+import { TimeTravelTransformers, Transformer } from './types';
 import { getKeys } from './utils';
 
-function udpateHistory<TState>(
+function udpateHistory<TState extends object>(
   currentState: TState,
   newState: TState,
   container: TimeTravelContainer,
@@ -24,13 +24,21 @@ function udpateHistory<TState>(
   return newState;
 }
 
-function createTimeTravelReducer<TState>(
-  reducer: (state: TState, ...args: any[]) => TState,
+function createTimeTravelTransformer<
+  TState extends object,
+  TArgs extends any[]
+>(
+  transformer: Transformer<TState, TArgs>,
   container: TimeTravelContainer,
   scope?: IScope<TState, object>,
 ) {
-  return (currentState: TState, ...args: any[]) => {
-    const result = reducer(currentState, ...args);
+  return (currentState: TState, ...args: TArgs) => {
+    const result = transformer(currentState, ...args);
+    if (internals.isPromise(result)) {
+      return result.then(state =>
+        udpateHistory(currentState, state, container, scope),
+      );
+    }
     return udpateHistory(currentState, result, container, scope);
   };
 }
@@ -42,57 +50,74 @@ function createUndo(container: TimeTravelContainer) {
 }
 
 function createRedo(container: TimeTravelContainer) {
-  return <TState>(currentState: TState): TState => {
+  return <TState>(currentState: TState): TState | Promise<TState> => {
     return container.redo(currentState) as TState;
   };
 }
 
-export function staatTimeTravel<
-  TState,
-  TReducers extends Record<keyof TReducers, unknown>
+export function timeTravelTransformers<
+  TState extends object,
+  TTransformers extends Record<keyof TTransformers, Transformer<any, any[]>>
 >(
-  reducers: TReducers,
+  transformers: TTransformers,
   container: TimeTravelContainer,
   scope?: IScope<TState, object>,
-): StaatTimeTravel<TState, TReducers> {
-  const newReducers: StaatTimeTravel<TState, TReducers> = getKeys(
-    reducers,
-  ).reduce(
+): TimeTravelTransformers<TState, TTransformers> {
+  const newTransformers: TimeTravelTransformers<
+    TState,
+    TTransformers
+  > = getKeys(transformers).reduce(
     (obj, key) => {
-      const current = reducers[key] as ((
-        state: TState,
-        ...args: any[]
-      ) => TState);
-      obj[key] = createTimeTravelReducer<TState>(current, container, scope);
+      const current = transformers[key];
+      obj[key] = createTimeTravelTransformer<TState, any[]>(
+        current,
+        container,
+        scope,
+      );
 
       return obj;
     },
-    {} as Record<keyof TReducers, (state: TState, ...args: any[]) => TState>,
-  ) as StaatTimeTravel<TState, TReducers>;
+    {} as Record<keyof TTransformers, Transformer<TState, any[]>>,
+  ) as TimeTravelTransformers<TState, TTransformers>;
 
-  newReducers.undo = scope
-    ? scope.reducer(createUndo(container))
+  newTransformers.undo = scope
+    ? scope.transformer(createUndo(container))
     : createUndo(container);
-  newReducers.redo = scope
-    ? scope.reducer(createRedo(container))
+  newTransformers.redo = scope
+    ? scope.transformer(createRedo(container))
     : createRedo(container);
 
-  return newReducers;
+  return newTransformers;
 }
 
-function timeTravel<TState, TScope, TReducers>(
-  reducers: TReducers,
+function timeTravel<
+  TState,
+  TScope,
+  TTransformers extends Record<keyof TTransformers, Transformer<TState, any[]>>
+>(
+  transformers: TTransformers,
   scope: IScope<TState, TScope>,
-): StaatTimeTravel<TState, TReducers>;
-function timeTravel<TState, TReducers>(
-  reducers: TReducers,
-): StaatTimeTravel<TState, TReducers>;
-function timeTravel<TState, TReducers>(
-  reducers: TReducers,
+): TimeTravelTransformers<TState, TTransformers>;
+function timeTravel<
+  TState extends object,
+  TTransformers extends Record<
+    keyof TTransformers,
+    Transformer<any, any[]>
+  > = TTransformers
+>(transformers: TTransformers): TimeTravelTransformers<TState, TTransformers>;
+function timeTravel<
+  TState extends object,
+  TTransformers extends Record<keyof TTransformers, Transformer<TState, any[]>>
+>(
+  transformers: TTransformers,
   scope?: IScope<TState, object>,
-): StaatTimeTravel<TState, TReducers> {
+): TimeTravelTransformers<TState, TTransformers> {
   const container = new TimeTravelContainer();
-  return staatTimeTravel<TState, TReducers>(reducers, container, scope);
+  return timeTravelTransformers<TState, TTransformers>(
+    transformers,
+    container,
+    scope,
+  );
 }
 
 export default timeTravel;

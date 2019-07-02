@@ -1,8 +1,8 @@
 import React from 'react';
 import { reactStaat } from '../react';
-import staat, { LegacyStaat } from 'staat';
+import staat from 'staat';
 import { ReactStaat } from '../types';
-import { render, fireEvent, cleanup } from '@testing-library/react';
+import { render, fireEvent } from 'react-testing-library';
 /* tslint:disable no-submodule-imports */
 import 'jest-dom/extend-expect';
 
@@ -44,10 +44,9 @@ const TestComponent: React.StatelessComponent<TestComponentProps> = ({
 describe('React', () => {
   let sut: ReactStaat<TestState>;
   let ConnectedComponent: React.ComponentType<OwnProps>;
-  let staatState: LegacyStaat<typeof transformers, TestState>;
 
   beforeEach(() => {
-    staatState = staat(transformers, state);
+    const staatState = staat(transformers, state);
     sut = reactStaat(staatState);
 
     ConnectedComponent = sut.connect<OwnProps, TestState, TransformerProps>(
@@ -61,8 +60,6 @@ describe('React', () => {
       }),
     )(TestComponent);
   });
-
-  afterEach(cleanup);
 
   it('builds react-staat object', () => {
     expect(typeof sut.Provider).toBe('function');
@@ -93,17 +90,5 @@ describe('React', () => {
       </sut.Provider>,
     );
     expect(getByText(/^Count:/).textContent).toBe('Count: 10');
-  });
-
-  it('unsubscribes when unmounting', async () => {
-    staatState.unsubscribe = jest.fn();
-    const tree = (
-      <sut.Provider>
-        <ConnectedComponent />
-      </sut.Provider>
-    );
-    const { unmount } = render(tree);
-    unmount();
-    expect(staatState.unsubscribe).toHaveBeenCalled();
   });
 });
