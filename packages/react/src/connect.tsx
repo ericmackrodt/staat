@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { Consumer } from './context';
+import React, { Context } from 'react';
 
-export default function makeConnect<TState>() {
+export default function makeConnect<TState>({ Consumer }: Context<TState>) {
   return function connect<TOwnProps, TStateProps, TTransformerProps>(
     mapStateToProps: (states: TState, ownProps: TOwnProps) => TStateProps,
     mapTransformersToProps?: () => TTransformerProps,

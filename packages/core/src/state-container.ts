@@ -1,4 +1,5 @@
 import { Subscription } from './types';
+import { processLargeArrayAsync } from './utils';
 
 export class StateContainer<T> {
   private state: T;
@@ -10,15 +11,13 @@ export class StateContainer<T> {
   }
 
   private fireSubscriptions = () => {
-    const results = this.subscriptions.map(s => s());
-    return Promise.all(results);
+    processLargeArrayAsync(this.subscriptions, s => s());
   };
 
   public setState(state: T) {
-    return Promise.resolve().then(() => {
-      this.state = state;
-      return this.fireSubscriptions().then(() => this.state);
-    });
+    this.state = state;
+    this.fireSubscriptions();
+    return this.state;
   }
 
   public getState() {

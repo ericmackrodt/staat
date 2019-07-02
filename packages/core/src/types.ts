@@ -22,13 +22,31 @@ export type TransformersTree<TTransformers extends {}> = {
     : TTransformers[TKey]
 };
 
+export type RequesterState<TState> = {
+  select<TSubset>(selector: (state: TState) => TSubset): TSubset;
+  reduce<TArgs extends any[]>(
+    reducer: (state: TState, ...args: TArgs) => TState,
+    ...args: TArgs
+  ): TState;
+};
+
 export type StateContainerType<TState> = {
   currentState: TState;
+  reduce<TArgs extends any[]>(
+    reducer: (state: TState, ...args: TArgs) => TState,
+    ...args: TArgs
+  ): TState;
+  request<TArgs extends any[]>(
+    requester: (state: RequesterState<TState>, ...args: TArgs) => Promise<void>,
+    ...args: TArgs
+  ): Promise<void>;
   subscribe(fn: Subscription): void;
   unsubscribe(fn: Subscription): void;
 };
 
-export type Staat<TState, TTransformers> = StateContainerType<TState> &
+export type Staat<TState> = StateContainerType<TState>;
+
+export type LegacyStaat<TTransformers, TState> = StateContainerType<TState> &
   TransformersTree<TTransformers>;
 
 export type Subscription = () => Promise<void>;
@@ -52,6 +70,13 @@ export interface IScopedTransformerFactory<TState, TScope> {
 export interface IScope<TState, TScope> {
   path: string[];
 
+  reducer<TArgs extends any[]>(
+    definition: (currentScope: TScope, ...args: TArgs) => TScope,
+  ): (currentState: TState, ...args: TArgs) => TState;
+
+  /**
+   * Deprecated
+   */
   transformer<TArgs extends any[]>(
     definition: (
       currentScope: TScope,
