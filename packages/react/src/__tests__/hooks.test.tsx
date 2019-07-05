@@ -2,6 +2,7 @@ import { reactStaat } from '../react';
 import staat from 'staat';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { wait } from '@testing-library/react';
+import { RequesterState } from 'staat';
 
 type TestState = {
   count: number;
@@ -147,6 +148,76 @@ describe('Hooks', () => {
       });
 
       expect(staatState.currentState.count).toBe(300);
+    });
+  });
+
+  describe('useRequests', () => {
+    it('can get the state', async () => {
+      const staatState = staat({ ...state, count: 10 });
+      const { useRequests } = reactStaat(staatState);
+
+      let selected: number = 0;
+
+      async function testRequester({ select }: RequesterState<TestState>) {
+        selected = select(s => s.count);
+      }
+
+      const { result } = renderHook(() =>
+        useRequests({
+          testRequester,
+        }),
+      );
+
+      act(() => {
+        result.current.testRequester();
+      });
+
+      await wait(() => expect(selected).toBe(10));
+    });
+
+    it('can set the state', async () => {
+      const staatState = staat({ ...state });
+      const { useRequests } = reactStaat(staatState);
+
+      async function testRequester({ reduce }: RequesterState<TestState>) {
+        reduce(s => ({ ...s, count: 904 }));
+      }
+
+      const { result } = renderHook(() =>
+        useRequests({
+          testRequester,
+        }),
+      );
+
+      act(() => {
+        result.current.testRequester();
+      });
+
+      await wait(() => expect(staatState.select(s => s.count)).toBe(904));
+    });
+
+    it('can use parameters', async () => {
+      const staatState = staat({ ...state });
+      const { useRequests } = reactStaat(staatState);
+
+      async function testRequester(
+        { reduce }: RequesterState<TestState>,
+        count: number,
+      ) {
+        reduce(s => ({ ...s, count }));
+      }
+
+      const { result } = renderHook(() =>
+        useRequests({
+          testRequester,
+        }),
+      );
+
+      act(() => {
+        result.current.testRequester(557);
+      });
+
+      await wait(() => expect(staatState.select(s => s.count)).toBe(557));
     });
   });
 });
