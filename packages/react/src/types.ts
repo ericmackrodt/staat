@@ -1,3 +1,5 @@
+import { RequesterState } from 'staat';
+
 export type ProviderProps<T> = {
   states: T;
 };
@@ -11,6 +13,15 @@ export type Reducers<TState, TReducers extends {}> = {
     : TReducers[TKey]
 };
 
+export type Requesters<TState, TRequesters extends {}> = {
+  [TKey in keyof TRequesters]: TRequesters[TKey] extends (
+    state: RequesterState<TState>,
+    ...args: infer TArgs
+  ) => Promise<void>
+    ? (...args: TArgs) => void
+    : TRequesters[TKey]
+};
+
 export type ReactStaat<TState> = {
   Provider: React.ComponentType;
   useStaat<TSubset>(selector: (state: TState) => TSubset): TSubset;
@@ -19,6 +30,14 @@ export type ReactStaat<TState> = {
   >(
     reducers: TReducers,
   ): Reducers<TState, TReducers>;
+  useRequests<
+    TRequests extends Record<
+      string,
+      (state: RequesterState<TState>, ...args: any[]) => Promise<void>
+    >
+  >(
+    reducers: TRequests,
+  ): Requesters<TState, TRequests>;
   connect<TOwnProps, TStateProps, TTransformerProps = {}>(
     mapStateToProps: (state: TState, ownProps: TOwnProps) => TStateProps,
     mapTransformersToProps?: () => TTransformerProps,

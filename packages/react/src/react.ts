@@ -1,7 +1,7 @@
 import React from 'react';
 import { Staat, LegacyStaat } from 'staat';
 import makeConnect from './connect';
-import { makeUseStaat, makeUseReducers } from './hooks';
+import { makeUseStaat, makeUseReducers, makeUseRequests } from './hooks';
 import makeProvider from './provider';
 import { ReactStaat } from './types';
 
@@ -18,5 +18,6 @@ export function reactStaat<TState>(
     connect: makeConnect<TState>(context),
     useStaat: makeUseStaat<TState>(staat),
     useReducers: makeUseReducers<TState>(staat),
+    useRequests: makeUseRequests<TState>(staat),
   };
 }

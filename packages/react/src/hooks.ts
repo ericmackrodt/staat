@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Staat } from 'staat';
-import { Reducers } from './types';
+import { Reducers, Requesters } from './types';
+import { RequesterState } from 'staat/build/types';
 
 function shallowEqual<T extends {}>(left: T, right: T) {
   const leftKeys = Object.keys(left || {});
@@ -87,5 +88,30 @@ export function makeUseReducers<TState>(
       {} as Record<string, unknown>,
     );
     return result as Reducers<TState, any>;
+  };
+}
+
+export function makeUseRequests<TState>(
+  staat: Staat<TState>,
+): <
+  TRequesters extends Record<
+    string,
+    (state: RequesterState<TState>, ...args: any[]) => Promise<void>
+  >
+>(
+  requesters: TRequesters,
+) => Requesters<TState, TRequesters> {
+  return function(requesters) {
+    const result = Object.keys(requesters).reduce(
+      (acc, key) => {
+        acc[key] = (...args: any[]) => {
+          const requester = requesters[key];
+          staat.request(requester, ...args);
+        };
+        return acc;
+      },
+      {} as Record<string, unknown>,
+    );
+    return result as Requesters<TState, any>;
   };
 }
